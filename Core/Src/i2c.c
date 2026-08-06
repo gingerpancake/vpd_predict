@@ -24,12 +24,16 @@
 #include "sensor.h"
 #include "tim.h"
 
+#include <string.h>
+
 volatile uint8_t i2c_error_event = 0U;
 volatile uint8_t in_sensor_rx_ready = 0U;
 volatile uint8_t ex_sensor_rx_ready = 0U;
 
 
 volatile uint32_t i2c_error_code;
+
+SENSOR_DATA sensor_data;
 /* USER CODE END 0 */
 
 I2C_HandleTypeDef hi2c1;
@@ -192,10 +196,12 @@ void HAL_I2C_MasterRxCpltCallback(I2C_HandleTypeDef *hi2c)
     if (sensor_state == SENSOR_STATE_IN_WAIT)
     {
         in_sensor_rx_ready = 1U;
+        memcpy(&sensor_data, ircv, sizeof(sensor_data));
     }
     else if (sensor_state == SENSOR_STATE_EX_WAIT)
     {
         ex_sensor_rx_ready = 1U;
+        memcpy(&sensor_data, ercv, sizeof(sensor_data));
     }
 
     sensor_state = SENSOR_STATE_IDLE;

@@ -9,8 +9,8 @@
 #include "i2c.h"
 
 /* values */
-uint8_t icmd[2];
-uint8_t ecmd[2];
+uint8_t icmd[2] = {0x24, 0x00};
+uint8_t ecmd[2] = {0x24, 0x00};
 
 uint8_t ircv[6];
 uint8_t ercv[6];

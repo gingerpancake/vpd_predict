@@ -23,8 +23,12 @@ extern uint8_t ercv[6];
 
 /* typedef */
 typedef struct {
-	float temp;
-	float humi;
+	uint8_t temp_msb;
+	uint8_t temp_lsb;
+	uint8_t temp_crc;
+	uint8_t humi_msb;
+	uint8_t humi_lsb;
+	uint8_t humi_crc;
 }SENSOR_DATA;
 
 typedef enum
