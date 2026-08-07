@@ -70,6 +70,8 @@ typedef enum {
 	VPD_HIGH,
 	VPD_TOO_HIGH
 }VPD_STATUS;
+
+ai_error err;
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -245,7 +247,6 @@ VPD_STATUS Get_Vpd_State(float vpd) {
 
 static void AI_Init(void) {
 	ai_handle act_addr[] = { AI_HANDLE_PTR(activations) };
-	ai_error err;
 
 	err = ai_network_create_and_init(&network, act_addr, NULL);
 
@@ -263,13 +264,12 @@ static void AI_Get_InOutputs(void) {
 	ai_input = ai_network_inputs_get(network, NULL);
 	ai_output = ai_network_outputs_get(network, NULL);
 
-	ai_input[0].data = AI_HANDLE_PTR(sequence);;
+	ai_input[0].data = AI_HANDLE_PTR(sequence);
 	ai_output[0].data = AI_HANDLE_PTR(ai_output_size);
 }
 
 static void AI_Run(void) {
 	ai_i32 batch;
-	ai_error err;
 
 	batch = ai_network_run(network, ai_input, ai_output);
 
