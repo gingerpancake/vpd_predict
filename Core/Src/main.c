@@ -102,6 +102,9 @@ static AI_INPUT_DATA sequence[AI_NETWORK_IN_1_HEIGHT];
 
 ai_u32	ai_err_code = 0x00;
 ai_u32	ai_err_type = 0x00;
+
+float Temp = 0;
+float Humi = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -112,7 +115,7 @@ static void AI_Get_InOutputs(void);
 static void AI_Run(void);
 static void AI_Update_Sequence(AI_INPUT_DATA *new_data);
 static void AI_Init_Sequence(AI_INPUT_DATA *first_data);
-float Vpd_Calculator(float temperature, float humidity);
+float Vpd_Calculator(uint8_t temperature, uint8_t humidity);
 VPD_STATUS Get_Vpd_State(float vpd);
 /* USER CODE END PFP */
 
@@ -163,7 +166,7 @@ int main(void)
   while (1)
     {
   /* USER CODE BEGIN WHILE */
-	  //begin main
+
   /* USER CODE END WHILE */
     }
 }
@@ -223,13 +226,18 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
-float Vpd_Calculator(float temperature, float humidity) {
+float Vpd_Calculator(uint8_t temperature, uint8_t humidity) {
 
 	float svp;
 	float vpd;
 
-	svp = 0.6108f * expf((17.27f * temperature) / (temperature + 237.3f));
-	vpd = svp * (1.0f - humidity / 100.0f);
+	/* float  uint8 data -> float */
+
+	temperature = Temp;
+	humidity = Humi;
+
+	svp = 0.6108f * expf((17.27f * Temp) / (Temp + 237.3f));
+	vpd = svp * (1.0f - Humi / 100.0f);
 
 	return vpd;
 }
