@@ -1,6 +1,6 @@
 ST Edge AI Core v2.2.0-20266 2adc00962
-Created date          : 2026-08-05 22:53:45
-Parameters            : generate --target stm32l4 --name network -m C:/Users/karma/Desktop/lstm/final_lstm.h5 --compression none --verbosity 1 --workspace C:/Users/karma/AppData/Local/Temp/mxAI_workspace13926676198940001795981424237555991 --output C:/Users/karma/.stm32cubemx/network_output
+Created date          : 2026-08-08 12:35:27
+Parameters            : generate --target stm32l4 --name network -m C:/Users/karma/Desktop/lstm/final_lstm.h5 --compression none --verbosity 1 --workspace C:/Users/karma/AppData/Local/Temp/mxAI_workspace16147757156254001067902157981691782 --output C:/Users/karma/.stm32cubemx/network_output
 
 Exec/report summary (generate)
 -------------------------------------------------------------------------------------------------------------
@@ -11,7 +11,7 @@ compression        :   none
 options            :   allocate-inputs, allocate-outputs                                                     
 optimization       :   balanced                                                                              
 target/series      :   stm32l4                                                                               
-workspace dir      :   C:\Users\karma\AppData\Local\Temp\mxAI_workspace13926676198940001795981424237555991   
+workspace dir      :   C:\Users\karma\AppData\Local\Temp\mxAI_workspace16147757156254001067902157981691782   
 output dir         :   C:\Users\karma\.stm32cubemx\network_output                                            
 model_fmt          :   float                                                                                 
 model_name         :   final_lstm                                                                            
