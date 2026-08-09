@@ -77,6 +77,35 @@ ai_error err;
 /* USER CODE BEGIN PD */
 #define VPD_IDEAL_MIN     0.8f
 #define VPD_IDEAL_MAX     1.2f
+
+//x_scaler value
+#define X_EX_TEMP			0.02136752f
+#define	X_EX_HUMI			0.01136364f
+#define	X_IN_TEMP			0.03030303f
+#define	X_IN_HUMI			0.01333333f
+#define	X_HOUR_SIN			0.5f
+#define	X_HOUR_COS			0.5f
+#define	X_MONTH_SIN			0.5f
+#define	X_MONTH_COS			0.66666667f
+
+//y_scaler value
+#define	Y_IN_TEMP			0.03030303f
+#define	Y_IN_HUMI			0.01333333f
+
+//x_scaler min value
+#define X_EX_TEMP_MIN			0.24786325f
+#define	X_EX_HUMI_MIN			-0.125f
+#define	X_IN_TEMP_MIN			-0.12121212f
+#define	X_IN_HUMI_MIN			-0.33333333f
+#define	X_HOUR_SIN_MIN			0.5f
+#define	X_HOUR_COS_MIN			0.5f
+#define	X_MONTH_SIN_MIN			0.5f
+#define	X_MONTH_COS_MIN			0.66666667f
+
+//y_scaler min value
+#define	Y_IN_TEMP_MIN			-0.12121212f
+#define	Y_IN_HUMI_MIN			-0.33333333f
+
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -105,6 +134,12 @@ ai_u32	ai_err_type = 0x00;
 
 float Temp = 0;
 float Humi = 0;
+
+float hour_sin;
+float hour_cos;
+
+float month_sin;
+float month_cos;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -117,6 +152,9 @@ static void AI_Update_Sequence(AI_INPUT_DATA *new_data);
 static void AI_Init_Sequence(AI_INPUT_DATA *first_data);
 float Vpd_Calculator(uint8_t temperature, uint8_t humidity);
 VPD_STATUS Get_Vpd_State(float vpd);
+static float Y_Inverse_Scale(float scaled_value, float scale, float min);
+static void X_Scale(AI_INPUT_DATA *data);
+static void RTC_Time_scale(AI_INPUT_DATA *data, float hour, float month);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -297,6 +335,8 @@ static void AI_Update_Sequence(AI_INPUT_DATA *new_data)
 	    return;
 	}
 
+	X_Scale(new_data);
+
 	if(sequence_initialized == 0)
 		{
 			AI_Init_Sequence(new_data);
@@ -321,6 +361,49 @@ static void AI_Init_Sequence(AI_INPUT_DATA *first_data)
 	}
 
 	sequence_initialized = 1;
+}
+
+static float Y_Inverse_Scale(float scaled_value, float scale, float min) {
+	return (scaled_value - min) / scale;
+}
+
+static void X_Scale(AI_INPUT_DATA *data) {
+    data->ex_temp = data->ex_temp * X_EX_TEMP + X_EX_TEMP_MIN;
+
+    data->ex_humi = data->ex_humi * X_EX_HUMI + X_EX_HUMI_MIN;
+
+    data->in_temp = data->in_temp * X_IN_TEMP + X_IN_TEMP_MIN;
+
+    data->in_humi = data->in_humi * X_IN_HUMI + X_IN_HUMI_MIN;
+
+    data->hour_sin = data->hour_sin * X_HOUR_SIN + X_HOUR_SIN_MIN;
+
+    data->hour_cos = data->hour_cos * X_HOUR_COS + X_HOUR_COS_MIN;
+
+    data->month_sin = data->month_sin * X_MONTH_SIN + X_MONTH_SIN_MIN;
+
+    data->month_cos = data->month_cos * X_MONTH_COS + X_MONTH_COS_MIN;
+}
+
+static void RTC_Time_scale(AI_INPUT_DATA *data, float hour, float month) {
+
+	RTC_TimeTypeDef sTime;
+	RTC_DateTypeDef sDate;
+
+	HAL_RTC_GetTime(&hrtc, &sTime, RTC_FORMAT_BIN);
+	HAL_RTC_GetDate(&hrtc, &sDate, RTC_FORMAT_BIN);
+
+    data->hour_sin =
+        sinf(2.0f * M_PI * (float)sTime.Hours / 24.0f);
+
+    data->hour_cos =
+        cosf(2.0f * M_PI * (float)sTime.Hours / 24.0f);
+
+    data->month_sin =
+        sinf(2.0f * M_PI * (float)sDate.Month / 12.0f);
+
+    data->month_cos =
+        cosf(2.0f * M_PI * (float)sDate.Month / 12.0f);
 }
 /* USER CODE END 4 */
 
