@@ -19,6 +19,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "i2c.h"
+#include "iwdg.h"
 #include "rtc.h"
 #include "tim.h"
 #include "usart.h"
@@ -140,6 +141,7 @@ float hour_cos;
 
 float month_sin;
 float month_cos;
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -195,22 +197,27 @@ int main(void)
   MX_I2C1_Init();
   MX_USART1_UART_Init();
   MX_TIM6_Init();
+  MX_I2C3_Init();
+  MX_TIM7_Init();
+  MX_IWDG_Init();
+  MX_TIM16_Init();
   /* USER CODE BEGIN 2 */
   AI_Init();
   AI_Get_InOutputs();
+  HAL_IWDG_Init(&hiwdg);
+  HAL_TIM_Base_Start_IT(&htim16);
   /* USER CODE END 2 */
 
   /* Infinite loop */
+  /* USER CODE BEGIN WHILE */
   while (1)
     {
-  /* USER CODE BEGIN WHILE */
+    /* USER CODE END WHILE */
 
-  /* USER CODE END WHILE */
+    /* USER CODE BEGIN 3 */
     }
-}
-  /* USER CODE BEGIN 3 */
-
   /* USER CODE END 3 */
+}
 
 /**
   * @brief System Clock Configuration

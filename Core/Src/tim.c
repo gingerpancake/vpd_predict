@@ -23,9 +23,15 @@
 /* USER CODE BEGIN 0 */
 #include "sensor.h"
 #include "i2c.h"
+#include "iwdg.h"
 /* USER CODE END 0 */
 
 TIM_HandleTypeDef htim6;
+TIM_HandleTypeDef htim7;
+TIM_HandleTypeDef htim16;
+
+volatile uint8_t heartbeat = 0;
+volatile uint8_t last_heartbeat = 0;
 
 /* TIM6 init function */
 void MX_TIM6_Init(void)
@@ -64,6 +70,70 @@ void MX_TIM6_Init(void)
   /* USER CODE END TIM6_Init 2 */
 
 }
+/* TIM7 init function */
+void MX_TIM7_Init(void)
+{
+
+  /* USER CODE BEGIN TIM7_Init 0 */
+
+  /* USER CODE END TIM7_Init 0 */
+
+  TIM_MasterConfigTypeDef sMasterConfig = {0};
+
+  /* USER CODE BEGIN TIM7_Init 1 */
+
+  /* USER CODE END TIM7_Init 1 */
+  htim7.Instance = TIM7;
+  htim7.Init.Prescaler = 31999;
+  htim7.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim7.Init.Period = 49;
+  htim7.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  if (HAL_TIM_Base_Init(&htim7) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  if (HAL_TIM_OnePulse_Init(&htim7, TIM_OPMODE_SINGLE) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_UPDATE;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  if (HAL_TIMEx_MasterConfigSynchronization(&htim7, &sMasterConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN TIM7_Init 2 */
+
+  /* USER CODE END TIM7_Init 2 */
+
+}
+/* TIM16 init function */
+void MX_TIM16_Init(void)
+{
+
+  /* USER CODE BEGIN TIM16_Init 0 */
+
+  /* USER CODE END TIM16_Init 0 */
+
+  /* USER CODE BEGIN TIM16_Init 1 */
+
+  /* USER CODE END TIM16_Init 1 */
+  htim16.Instance = TIM16;
+  htim16.Init.Prescaler = 40000-1;
+  htim16.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim16.Init.Period = 60000-1;
+  htim16.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  htim16.Init.RepetitionCounter = 0;
+  htim16.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  if (HAL_TIM_Base_Init(&htim16) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN TIM16_Init 2 */
+
+  /* USER CODE END TIM16_Init 2 */
+
+}
 
 void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* tim_baseHandle)
 {
@@ -82,6 +152,32 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* tim_baseHandle)
   /* USER CODE BEGIN TIM6_MspInit 1 */
 
   /* USER CODE END TIM6_MspInit 1 */
+  }
+  else if(tim_baseHandle->Instance==TIM7)
+  {
+  /* USER CODE BEGIN TIM7_MspInit 0 */
+
+  /* USER CODE END TIM7_MspInit 0 */
+    /* TIM7 clock enable */
+    __HAL_RCC_TIM7_CLK_ENABLE();
+  /* USER CODE BEGIN TIM7_MspInit 1 */
+
+  /* USER CODE END TIM7_MspInit 1 */
+  }
+  else if(tim_baseHandle->Instance==TIM16)
+  {
+  /* USER CODE BEGIN TIM16_MspInit 0 */
+
+  /* USER CODE END TIM16_MspInit 0 */
+    /* TIM16 clock enable */
+    __HAL_RCC_TIM16_CLK_ENABLE();
+
+    /* TIM16 interrupt Init */
+    HAL_NVIC_SetPriority(TIM1_UP_TIM16_IRQn, 0, 0);
+    HAL_NVIC_EnableIRQ(TIM1_UP_TIM16_IRQn);
+  /* USER CODE BEGIN TIM16_MspInit 1 */
+
+  /* USER CODE END TIM16_MspInit 1 */
   }
 }
 
@@ -102,6 +198,31 @@ void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* tim_baseHandle)
 
   /* USER CODE END TIM6_MspDeInit 1 */
   }
+  else if(tim_baseHandle->Instance==TIM7)
+  {
+  /* USER CODE BEGIN TIM7_MspDeInit 0 */
+
+  /* USER CODE END TIM7_MspDeInit 0 */
+    /* Peripheral clock disable */
+    __HAL_RCC_TIM7_CLK_DISABLE();
+  /* USER CODE BEGIN TIM7_MspDeInit 1 */
+
+  /* USER CODE END TIM7_MspDeInit 1 */
+  }
+  else if(tim_baseHandle->Instance==TIM16)
+  {
+  /* USER CODE BEGIN TIM16_MspDeInit 0 */
+
+  /* USER CODE END TIM16_MspDeInit 0 */
+    /* Peripheral clock disable */
+    __HAL_RCC_TIM16_CLK_DISABLE();
+
+    /* TIM16 interrupt Deinit */
+    HAL_NVIC_DisableIRQ(TIM1_UP_TIM16_IRQn);
+  /* USER CODE BEGIN TIM16_MspDeInit 1 */
+
+  /* USER CODE END TIM16_MspDeInit 1 */
+  }
 }
 
 /* USER CODE BEGIN 1 */
@@ -109,30 +230,47 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
     HAL_StatusTypeDef status;
 
-    if (htim->Instance != TIM6)
+    if (htim->Instance == TIM6)
     {
-        return;
-    }
+        if (sensor_state != SENSOR_STATE_IN_WAIT)
+        {
+            return;
+        }
 
-    HAL_TIM_Base_Stop_IT(&htim6);
+        HAL_TIM_Base_Stop_IT(&htim6);
 
-    if (sensor_state == SENSOR_STATE_IN_WAIT)
-    {
-        status = HAL_I2C_Master_Receive_IT(&hi2c1, IN_SENSOR_ADDR, ircv, sizeof(ircv));
-    }
-    else if (sensor_state == SENSOR_STATE_EX_WAIT)
-    {
-        status = HAL_I2C_Master_Receive_IT(&hi2c1, EX_SENSOR_ADDR, ercv, sizeof(ercv));
-    }
-    else
-    {
-        return;
-    }
+        status = HAL_I2C_Master_Receive_IT(&hi2c1, SENSOR_ADDR, ircv, sizeof(ircv));
 
-    if (status != HAL_OK)
+        if (status != HAL_OK)
+        {
+            sensor_state = SENSOR_STATE_IDLE;
+            i2c_error_event = 1U;
+        }
+    }
+    else if (htim->Instance == TIM7)
     {
-        sensor_state = SENSOR_STATE_IDLE;
-        i2c_error_event = 1U;
+        if (sensor_state != SENSOR_STATE_EX_WAIT)
+        {
+            return;
+        }
+
+        HAL_TIM_Base_Stop_IT(&htim7);
+
+        status = HAL_I2C_Master_Receive_IT(&hi2c3, SENSOR_ADDR, ercv, sizeof(ercv));
+
+        if (status != HAL_OK)
+        {
+            sensor_state = SENSOR_STATE_IDLE;
+            i2c_error_event = 1U;
+        }
+    }
+    else if (htim->Instance == TIM16)
+    {
+        if (heartbeat != last_heartbeat)
+        {
+            last_heartbeat = heartbeat;
+            HAL_IWDG_Refresh(&hiwdg);
+        }
     }
 }
 

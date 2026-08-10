@@ -9,8 +9,7 @@
 #include "i2c.h"
 
 /* values */
-uint8_t icmd[2] = {0x24, 0x00};
-uint8_t ecmd[2] = {0x24, 0x00};
+uint8_t cmd[2] = {0x24, 0x00};
 
 uint8_t ircv[6];
 uint8_t ercv[6];
@@ -30,7 +29,7 @@ HAL_StatusTypeDef In_Sensor_Read(void)
 
     sensor_state = SENSOR_STATE_IN_WAIT;
 
-    status = HAL_I2C_Master_Transmit_IT(&hi2c1, IN_SENSOR_ADDR, icmd, sizeof(icmd));
+    status = HAL_I2C_Master_Transmit_IT(&hi2c1, SENSOR_ADDR, cmd, sizeof(cmd));
 
     if (status != HAL_OK)
     {
@@ -52,7 +51,7 @@ HAL_StatusTypeDef Ex_Sensor_Read(void)
 
     sensor_state = SENSOR_STATE_EX_WAIT;
 
-    status = HAL_I2C_Master_Transmit_IT(&hi2c1, EX_SENSOR_ADDR, ecmd, sizeof(ecmd));
+    status = HAL_I2C_Master_Transmit_IT(&hi2c3, SENSOR_ADDR, cmd, sizeof(cmd));
 
     if (status != HAL_OK)
     {

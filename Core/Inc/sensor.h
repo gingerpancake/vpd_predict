@@ -11,8 +11,7 @@
 #include "main.h"
 
 /* i2c address value */
-#define IN_SENSOR_ADDR	(0x44 << 1)
-#define EX_SENSOR_ADDR	(0x45 << 1)
+#define SENSOR_ADDR	(0x44 << 1)
 /* i2c address value */
 
 extern uint8_t icmd[2];
