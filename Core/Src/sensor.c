@@ -8,6 +8,7 @@
 #include "sensor.h"
 #include "i2c.h"
 
+#include "tim.h"
 /* values */
 uint8_t cmd[2] = {0x24, 0x00};
 
