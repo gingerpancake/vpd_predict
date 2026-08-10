@@ -31,6 +31,8 @@ HAL_StatusTypeDef In_Sensor_Read(void)
 
     status = HAL_I2C_Master_Transmit_IT(&hi2c1, SENSOR_ADDR, cmd, sizeof(cmd));
 
+    last_heartbeat ++;
+
     if (status != HAL_OK)
     {
         sensor_state = SENSOR_STATE_IDLE;
@@ -52,6 +54,8 @@ HAL_StatusTypeDef Ex_Sensor_Read(void)
     sensor_state = SENSOR_STATE_EX_WAIT;
 
     status = HAL_I2C_Master_Transmit_IT(&hi2c3, SENSOR_ADDR, cmd, sizeof(cmd));
+
+    last_heartbeat ++;
 
     if (status != HAL_OK)
     {

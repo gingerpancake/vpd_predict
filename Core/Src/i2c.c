@@ -281,6 +281,9 @@ void HAL_I2C_MasterTxCpltCallback(I2C_HandleTypeDef *hi2c) {
 		{
 			return;
 		}
+
+		last_heartbeat ++;
+
 	}
 
 	if(hi2c->Instance == I2C3)
@@ -291,6 +294,9 @@ void HAL_I2C_MasterTxCpltCallback(I2C_HandleTypeDef *hi2c) {
 		{
 			return;
 		}
+
+		last_heartbeat ++;
+
 	}
 }
 
@@ -332,11 +338,17 @@ void HAL_I2C_MasterRxCpltCallback(I2C_HandleTypeDef *hi2c)
     {
         in_sensor_rx_ready = 1U;
         memcpy(&in_sensor_data, ircv, sizeof(in_sensor_data));
+
+        last_heartbeat ++;
+
     }
     else if (sensor_state == SENSOR_STATE_EX_WAIT)
     {
         ex_sensor_rx_ready = 1U;
         memcpy(&ex_sensor_data, ercv, sizeof(ex_sensor_data));
+
+        last_heartbeat ++;
+
     }
 
     sensor_state = SENSOR_STATE_IDLE;

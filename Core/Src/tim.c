@@ -241,6 +241,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
         status = HAL_I2C_Master_Receive_IT(&hi2c1, SENSOR_ADDR, ircv, sizeof(ircv));
 
+        last_heartbeat ++;
+
         if (status != HAL_OK)
         {
             sensor_state = SENSOR_STATE_IDLE;
@@ -257,6 +259,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
         HAL_TIM_Base_Stop_IT(&htim7);
 
         status = HAL_I2C_Master_Receive_IT(&hi2c3, SENSOR_ADDR, ercv, sizeof(ercv));
+
+        last_heartbeat ++;
 
         if (status != HAL_OK)
         {
