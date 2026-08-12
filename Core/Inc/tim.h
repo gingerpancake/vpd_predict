@@ -39,8 +39,8 @@ extern TIM_HandleTypeDef htim7;
 extern TIM_HandleTypeDef htim16;
 
 /* USER CODE BEGIN Private defines */
-extern volatile uint8_t heartbeat;
-extern volatile uint8_t last_heartbeat;
+extern volatile uint32_t heartbeat;
+extern volatile uint32_t last_heartbeat;
 /* USER CODE END Private defines */
 
 void MX_TIM6_Init(void);

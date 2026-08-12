@@ -204,7 +204,6 @@ int main(void)
   /* USER CODE BEGIN 2 */
   AI_Init();
   AI_Get_InOutputs();
-  HAL_IWDG_Init(&hiwdg);
   HAL_TIM_Base_Start_IT(&htim16);
   /* USER CODE END 2 */
 
@@ -284,7 +283,7 @@ float Vpd_Calculator(uint8_t temperature, uint8_t humidity) {
 	svp = 0.6108f * expf((17.27f * Temp) / (Temp + 237.3f));
 	vpd = svp * (1.0f - Humi / 100.0f);
 
-	last_heartbeat ++;
+	heartbeat ++;
 
 	return vpd;
 }
@@ -296,7 +295,7 @@ VPD_STATUS Get_Vpd_State(float vpd) {
 	if (vpd <= 1.2f) return VPD_IDEAL;
 	if (vpd <= 1.4f) return VPD_HIGH;
 
-	last_heartbeat ++;
+	heartbeat ++;
 
 	return VPD_TOO_HIGH;
 }
@@ -306,7 +305,7 @@ static void AI_Init(void) {
 
 	err = ai_network_create_and_init(&network, act_addr, NULL);
 
-	last_heartbeat ++;
+	heartbeat ++;
 
 	/* error debuging */
 	if(err.type != AI_ERROR_NONE)
@@ -325,7 +324,7 @@ static void AI_Get_InOutputs(void) {
 	ai_input[0].data = AI_HANDLE_PTR(sequence);
 	ai_output[0].data = AI_HANDLE_PTR(ai_output_size);
 
-	last_heartbeat ++;
+	heartbeat ++;
 }
 
 static void AI_Run(void) {
@@ -333,7 +332,7 @@ static void AI_Run(void) {
 
 	batch = ai_network_run(network, ai_input, ai_output);
 
-	last_heartbeat ++;
+	heartbeat ++;
 
 	if(batch != 1) {
 		err = ai_network_get_error(network);
@@ -354,7 +353,7 @@ static void AI_Update_Sequence(AI_INPUT_DATA *new_data)
 
 	X_Scale(new_data);
 
-	last_heartbeat ++;
+	heartbeat ++;
 
 	if(sequence_initialized == 0)
 		{
@@ -379,7 +378,7 @@ static void AI_Init_Sequence(AI_INPUT_DATA *first_data)
 		sequence[i] = *first_data;
 	}
 
-	last_heartbeat ++;
+	heartbeat ++;
 
 	sequence_initialized = 1;
 }
@@ -388,7 +387,7 @@ static float Y_Inverse_Scale(float scaled_value, float scale, float min) {
 
 	return (scaled_value - min) / scale;
 
-	last_heartbeat ++;
+	heartbeat ++;
 }
 
 static void X_Scale(AI_INPUT_DATA *data) {
@@ -408,7 +407,7 @@ static void X_Scale(AI_INPUT_DATA *data) {
 
     data->month_cos = data->month_cos * X_MONTH_COS + X_MONTH_COS_MIN;
 
-    last_heartbeat ++;
+    heartbeat ++;
 
 }
 
@@ -432,7 +431,7 @@ static void RTC_Time_scale(AI_INPUT_DATA *data, float hour, float month) {
     data->month_cos =
         cosf(2.0f * M_PI * (float)sDate.Month / 12.0f);
 
-    last_heartbeat ++;
+    heartbeat ++;
 }
 /* USER CODE END 4 */
 

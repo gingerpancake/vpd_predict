@@ -24,14 +24,14 @@
 #include "sensor.h"
 #include "i2c.h"
 #include "iwdg.h"
+
+volatile uint32_t heartbeat = 0;
+volatile uint32_t last_heartbeat = 0;
 /* USER CODE END 0 */
 
 TIM_HandleTypeDef htim6;
 TIM_HandleTypeDef htim7;
 TIM_HandleTypeDef htim16;
-
-volatile uint8_t heartbeat = 0;
-volatile uint8_t last_heartbeat = 0;
 
 /* TIM6 init function */
 void MX_TIM6_Init(void)
@@ -241,7 +241,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
         status = HAL_I2C_Master_Receive_IT(&hi2c1, SENSOR_ADDR, ircv, sizeof(ircv));
 
-        last_heartbeat ++;
+        heartbeat ++;
 
         if (status != HAL_OK)
         {
@@ -260,7 +260,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
         status = HAL_I2C_Master_Receive_IT(&hi2c3, SENSOR_ADDR, ercv, sizeof(ercv));
 
-        last_heartbeat ++;
+        heartbeat ++;
 
         if (status != HAL_OK)
         {
