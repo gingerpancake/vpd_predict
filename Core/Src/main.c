@@ -71,6 +71,8 @@ typedef enum {
 }VPD_STATUS;
 
 ai_error err;
+volatile SYSTEM_STATUS system_status = RAIN_STOP;
+
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -210,7 +212,18 @@ int main(void)
   while (1)
     {
     /* USER CODE END WHILE */
+	  if(sequence_initialized != 0)					//fill ai sequence quickly when board (re)booted. run only once after (re)booting
+	  {
 
+	  }
+
+	  if(system_status == RAIN_DETECTED)			//if rain detected, run this codes
+	  {
+
+	  }else											//if no rains, run this code
+	  {
+
+	  }
     /* USER CODE BEGIN 3 */
     }
   /* USER CODE END 3 */

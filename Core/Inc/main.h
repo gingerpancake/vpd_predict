@@ -36,12 +36,15 @@ extern "C" {
 
 /* Exported types ------------------------------------------------------------*/
 /* USER CODE BEGIN ET */
-
+typedef enum {
+	RAIN_DETECTED,
+	RAIN_STOP
+}SYSTEM_STATUS;
 /* USER CODE END ET */
 
 /* Exported constants --------------------------------------------------------*/
 /* USER CODE BEGIN EC */
-
+extern volatile SYSTEM_STATUS system_status;
 /* USER CODE END EC */
 
 /* Exported macro ------------------------------------------------------------*/
@@ -59,12 +62,13 @@ void Error_Handler(void);
 /* Private defines -----------------------------------------------------------*/
 #define MCO_Pin GPIO_PIN_0
 #define MCO_GPIO_Port GPIOA
-#define RELAY_4_Pin GPIO_PIN_1
-#define RELAY_4_GPIO_Port GPIOA
+#define RAIN_DETECTION_Pin GPIO_PIN_1
+#define RAIN_DETECTION_GPIO_Port GPIOA
+#define RAIN_DETECTION_EXTI_IRQn EXTI1_IRQn
 #define VCP_TX_Pin GPIO_PIN_2
 #define VCP_TX_GPIO_Port GPIOA
-#define RAIN_DETECT_Pin GPIO_PIN_3
-#define RAIN_DETECT_GPIO_Port GPIOA
+#define RELAY_4_Pin GPIO_PIN_3
+#define RELAY_4_GPIO_Port GPIOA
 #define RELAY_1_Pin GPIO_PIN_5
 #define RELAY_1_GPIO_Port GPIOA
 #define EX_SENSOR_SCL_Pin GPIO_PIN_7

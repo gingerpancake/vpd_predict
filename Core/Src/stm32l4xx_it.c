@@ -24,6 +24,7 @@
 /* USER CODE BEGIN Includes */
 #include "stm32l4xx_ll_rtc.h"
 #include "stm32l4xx_ll_exti.h"
+#include "stm32l4xx_ll_gpio.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -219,6 +220,30 @@ void RTC_WKUP_IRQHandler(void)
   /* USER CODE BEGIN RTC_WKUP_IRQn 1 */
 	 LL_EXTI_ClearFlag_0_31(LL_EXTI_LINE_20);
   /* USER CODE END RTC_WKUP_IRQn 1 */
+}
+
+/**
+  * @brief This function handles EXTI line1 interrupt.
+  */
+void EXTI1_IRQHandler(void)
+{
+  /* USER CODE BEGIN EXTI1_IRQn 0 */
+	if(LL_EXTI_IsActiveFlag_0_31(LL_EXTI_LINE_1))
+	{
+		LL_EXTI_ClearFlag_0_31(LL_EXTI_LINE_1);
+
+		if(LL_GPIO_IsInputPinSet(RAIN_DETECTION_GPIO_Port, RAIN_DETECTION_Pin))
+		{
+			system_status = RAIN_DETECTED;
+		}else
+		{
+			system_status = RAIN_STOP;
+		}
+	}
+  /* USER CODE END EXTI1_IRQn 0 */
+  /* USER CODE BEGIN EXTI1_IRQn 1 */
+
+  /* USER CODE END EXTI1_IRQn 1 */
 }
 
 /**
