@@ -22,7 +22,6 @@
 #include "iwdg.h"
 #include "rtc.h"
 #include "tim.h"
-#include "usart.h"
 #include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
@@ -195,7 +194,6 @@ int main(void)
   MX_GPIO_Init();
   MX_RTC_Init();
   MX_I2C1_Init();
-  MX_USART1_UART_Init();
   MX_TIM6_Init();
   MX_I2C3_Init();
   MX_TIM7_Init();

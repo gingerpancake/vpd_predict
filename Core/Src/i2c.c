@@ -152,7 +152,7 @@ void HAL_I2C_MspInit(I2C_HandleTypeDef* i2cHandle)
     PA9     ------> I2C1_SCL
     PA10     ------> I2C1_SDA
     */
-    GPIO_InitStruct.Pin = GPIO_PIN_9|GPIO_PIN_10;
+    GPIO_InitStruct.Pin = IN_SENSOR_SCL_Pin|IN_SENSOR_SDA_Pin;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_OD;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
@@ -192,19 +192,19 @@ void HAL_I2C_MspInit(I2C_HandleTypeDef* i2cHandle)
     PA7     ------> I2C3_SCL
     PB4 (NJTRST)     ------> I2C3_SDA
     */
-    GPIO_InitStruct.Pin = GPIO_PIN_7;
+    GPIO_InitStruct.Pin = EX_SENSOR_SCL_Pin;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_OD;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
     GPIO_InitStruct.Alternate = GPIO_AF4_I2C3;
-    HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+    HAL_GPIO_Init(EX_SENSOR_SCL_GPIO_Port, &GPIO_InitStruct);
 
-    GPIO_InitStruct.Pin = GPIO_PIN_4;
+    GPIO_InitStruct.Pin = EX_SENSOR_SDA_Pin;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_OD;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
     GPIO_InitStruct.Alternate = GPIO_AF4_I2C3;
-    HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+    HAL_GPIO_Init(EX_SENSOR_SDA_GPIO_Port, &GPIO_InitStruct);
 
     /* I2C3 clock enable */
     __HAL_RCC_I2C3_CLK_ENABLE();
@@ -235,9 +235,9 @@ void HAL_I2C_MspDeInit(I2C_HandleTypeDef* i2cHandle)
     PA9     ------> I2C1_SCL
     PA10     ------> I2C1_SDA
     */
-    HAL_GPIO_DeInit(GPIOA, GPIO_PIN_9);
+    HAL_GPIO_DeInit(IN_SENSOR_SCL_GPIO_Port, IN_SENSOR_SCL_Pin);
 
-    HAL_GPIO_DeInit(GPIOA, GPIO_PIN_10);
+    HAL_GPIO_DeInit(IN_SENSOR_SDA_GPIO_Port, IN_SENSOR_SDA_Pin);
 
     /* I2C1 interrupt Deinit */
     HAL_NVIC_DisableIRQ(I2C1_EV_IRQn);
@@ -258,9 +258,9 @@ void HAL_I2C_MspDeInit(I2C_HandleTypeDef* i2cHandle)
     PA7     ------> I2C3_SCL
     PB4 (NJTRST)     ------> I2C3_SDA
     */
-    HAL_GPIO_DeInit(GPIOA, GPIO_PIN_7);
+    HAL_GPIO_DeInit(EX_SENSOR_SCL_GPIO_Port, EX_SENSOR_SCL_Pin);
 
-    HAL_GPIO_DeInit(GPIOB, GPIO_PIN_4);
+    HAL_GPIO_DeInit(EX_SENSOR_SDA_GPIO_Port, EX_SENSOR_SDA_Pin);
 
     /* I2C3 interrupt Deinit */
     HAL_NVIC_DisableIRQ(I2C3_EV_IRQn);

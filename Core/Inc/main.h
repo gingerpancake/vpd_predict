@@ -59,8 +59,22 @@ void Error_Handler(void);
 /* Private defines -----------------------------------------------------------*/
 #define MCO_Pin GPIO_PIN_0
 #define MCO_GPIO_Port GPIOA
+#define RELAY_4_Pin GPIO_PIN_1
+#define RELAY_4_GPIO_Port GPIOA
 #define VCP_TX_Pin GPIO_PIN_2
 #define VCP_TX_GPIO_Port GPIOA
+#define RAIN_DETECT_Pin GPIO_PIN_3
+#define RAIN_DETECT_GPIO_Port GPIOA
+#define RELAY_1_Pin GPIO_PIN_5
+#define RELAY_1_GPIO_Port GPIOA
+#define EX_SENSOR_SCL_Pin GPIO_PIN_7
+#define EX_SENSOR_SCL_GPIO_Port GPIOA
+#define RELAY_2_Pin GPIO_PIN_1
+#define RELAY_2_GPIO_Port GPIOB
+#define IN_SENSOR_SCL_Pin GPIO_PIN_9
+#define IN_SENSOR_SCL_GPIO_Port GPIOA
+#define IN_SENSOR_SDA_Pin GPIO_PIN_10
+#define IN_SENSOR_SDA_GPIO_Port GPIOA
 #define SWDIO_Pin GPIO_PIN_13
 #define SWDIO_GPIO_Port GPIOA
 #define SWCLK_Pin GPIO_PIN_14
@@ -69,6 +83,10 @@ void Error_Handler(void);
 #define VCP_RX_GPIO_Port GPIOA
 #define LD3_Pin GPIO_PIN_3
 #define LD3_GPIO_Port GPIOB
+#define EX_SENSOR_SDA_Pin GPIO_PIN_4
+#define EX_SENSOR_SDA_GPIO_Port GPIOB
+#define RELAY_3_Pin GPIO_PIN_6
+#define RELAY_3_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */
 
