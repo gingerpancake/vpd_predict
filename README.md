@@ -2,10 +2,10 @@
 roof vent opener/closer with VPD prediction function
 
 ==========basic rules==========
-1. #define must be written in uppercase letter.
+1. #define must be written in uppercase letter.<br>
    ex) #define VPD_PREDICT
    
-2. first letter of each word in a function name must be uppercase.
+2. first letter of each word in a function name must be uppercase.<br>
    ex) void Vpd_Predict(void);
    
 4. variable names must be written in lowercase letter(pointers are same too).
