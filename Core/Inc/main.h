@@ -67,14 +67,14 @@ void Error_Handler(void);
 #define RAIN_DETECTION_EXTI_IRQn EXTI1_IRQn
 #define VCP_TX_Pin GPIO_PIN_2
 #define VCP_TX_GPIO_Port GPIOA
-#define RELAY_4_Pin GPIO_PIN_3
-#define RELAY_4_GPIO_Port GPIOA
-#define RELAY_1_Pin GPIO_PIN_5
-#define RELAY_1_GPIO_Port GPIOA
+#define MOTOR_BR_2_Pin GPIO_PIN_3
+#define MOTOR_BR_2_GPIO_Port GPIOA
+#define MOTOR_FR_1_Pin GPIO_PIN_5
+#define MOTOR_FR_1_GPIO_Port GPIOA
 #define EX_SENSOR_SCL_Pin GPIO_PIN_7
 #define EX_SENSOR_SCL_GPIO_Port GPIOA
-#define RELAY_2_Pin GPIO_PIN_1
-#define RELAY_2_GPIO_Port GPIOB
+#define MOTOR_FR_2_Pin GPIO_PIN_1
+#define MOTOR_FR_2_GPIO_Port GPIOB
 #define IN_SENSOR_SCL_Pin GPIO_PIN_9
 #define IN_SENSOR_SCL_GPIO_Port GPIOA
 #define IN_SENSOR_SDA_Pin GPIO_PIN_10
@@ -89,8 +89,8 @@ void Error_Handler(void);
 #define LD3_GPIO_Port GPIOB
 #define EX_SENSOR_SDA_Pin GPIO_PIN_4
 #define EX_SENSOR_SDA_GPIO_Port GPIOB
-#define RELAY_3_Pin GPIO_PIN_6
-#define RELAY_3_GPIO_Port GPIOB
+#define MOTOR_BR_1_Pin GPIO_PIN_6
+#define MOTOR_BR_1_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */
 

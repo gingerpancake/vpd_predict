@@ -1,30 +1,30 @@
 ST Edge AI Core v2.2.0-20266 2adc00962
-Created date          : 2026-08-12 22:28:14
-Parameters            : generate --target stm32l4 --name network -m C:/Users/karma/Desktop/lstm/final_lstm.h5 --compression none --verbosity 1 --workspace C:/Users/karma/AppData/Local/Temp/mxAI_workspace934511050230012601956150912264841 --output C:/Users/karma/.stm32cubemx/network_output
+Created date          : 2026-08-14 08:42:04
+Parameters            : generate --target stm32l4 --name network -m C:/Users/karma/Desktop/lstm/final_lstm.h5 --compression none --verbosity 1 --workspace C:/Users/karma/AppData/Local/Temp/mxAI_workspace4739504389370012426009951326168620 --output C:/Users/karma/.stm32cubemx/network_output
 
 Exec/report summary (generate)
------------------------------------------------------------------------------------------------------------
-model file         :   C:\Users\karma\Desktop\lstm\final_lstm.h5                                           
-type               :   keras                                                                               
-c_name             :   network                                                                             
-compression        :   none                                                                                
-options            :   allocate-inputs, allocate-outputs                                                   
-optimization       :   balanced                                                                            
-target/series      :   stm32l4                                                                             
-workspace dir      :   C:\Users\karma\AppData\Local\Temp\mxAI_workspace934511050230012601956150912264841   
-output dir         :   C:\Users\karma\.stm32cubemx\network_output                                          
-model_fmt          :   float                                                                               
-model_name         :   final_lstm                                                                          
-model_hash         :   0xd9e36e84d3e75f44877fd33b3f884399                                                  
-params #           :   20,834 items (81.38 KiB)                                                            
------------------------------------------------------------------------------------------------------------
-input 1/1          :   'input_0', f32(1x48x8), 1.50 KBytes, activations                                    
-output 1/1         :   'dense_1', f32(1x2), 8 Bytes, activations                                           
-macc               :   902,274                                                                             
-weights (ro)       :   84,104 B (82.13 KiB) (1 segment) / +768(+0.9%) vs float model                       
-activations (rw)   :   3,584 B (3.50 KiB) (1 segment) *                                                    
-ram (total)        :   3,584 B (3.50 KiB) = 3,584 + 0 + 0                                                  
------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------
+model file         :   C:\Users\karma\Desktop\lstm\final_lstm.h5                                            
+type               :   keras                                                                                
+c_name             :   network                                                                              
+compression        :   none                                                                                 
+options            :   allocate-inputs, allocate-outputs                                                    
+optimization       :   balanced                                                                             
+target/series      :   stm32l4                                                                              
+workspace dir      :   C:\Users\karma\AppData\Local\Temp\mxAI_workspace4739504389370012426009951326168620   
+output dir         :   C:\Users\karma\.stm32cubemx\network_output                                           
+model_fmt          :   float                                                                                
+model_name         :   final_lstm                                                                           
+model_hash         :   0xd9e36e84d3e75f44877fd33b3f884399                                                   
+params #           :   20,834 items (81.38 KiB)                                                             
+------------------------------------------------------------------------------------------------------------
+input 1/1          :   'input_0', f32(1x48x8), 1.50 KBytes, activations                                     
+output 1/1         :   'dense_1', f32(1x2), 8 Bytes, activations                                            
+macc               :   902,274                                                                              
+weights (ro)       :   84,104 B (82.13 KiB) (1 segment) / +768(+0.9%) vs float model                        
+activations (rw)   :   3,584 B (3.50 KiB) (1 segment) *                                                     
+ram (total)        :   3,584 B (3.50 KiB) = 3,584 + 0 + 0                                                   
+------------------------------------------------------------------------------------------------------------
 (*) 'input'/'output' buffers are allocated in the activations buffer
 
 Model name - final_lstm

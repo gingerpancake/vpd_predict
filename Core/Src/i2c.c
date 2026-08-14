@@ -21,7 +21,6 @@
 #include "i2c.h"
 
 /* USER CODE BEGIN 0 */
-#include "sensor.h"
 #include "tim.h"
 
 #include <string.h>
@@ -30,11 +29,13 @@ volatile uint8_t i2c_error_event = 0U;
 volatile uint8_t in_sensor_rx_ready = 0U;
 volatile uint8_t ex_sensor_rx_ready = 0U;
 
+volatile uint8_t in_sensor_count = 0U;
+volatile uint8_t ex_sensor_count = 0U;
 
 volatile uint32_t i2c_error_code;
 
-SENSOR_DATA in_sensor_data;
-SENSOR_DATA ex_sensor_data;
+volatile SENSOR_DATA in_sensor_data;
+volatile SENSOR_DATA ex_sensor_data;
 /* USER CODE END 0 */
 
 I2C_HandleTypeDef hi2c1;
@@ -337,7 +338,14 @@ void HAL_I2C_MasterRxCpltCallback(I2C_HandleTypeDef *hi2c)
     if (sensor_state == SENSOR_STATE_IN_WAIT)
     {
         in_sensor_rx_ready = 1U;
-        memcpy(&in_sensor_data, ircv, sizeof(in_sensor_data));
+
+        in_sensor_count ++;
+
+        if(in_sensor_count >= 60)
+        {
+        	in_sensor_count = 0U;
+        	memcpy(&in_sensor_data, ircv, sizeof(in_sensor_data));
+        }
 
         heartbeat ++;
 
@@ -345,7 +353,14 @@ void HAL_I2C_MasterRxCpltCallback(I2C_HandleTypeDef *hi2c)
     else if (sensor_state == SENSOR_STATE_EX_WAIT)
     {
         ex_sensor_rx_ready = 1U;
-        memcpy(&ex_sensor_data, ercv, sizeof(ex_sensor_data));
+
+        ex_sensor_count ++;
+
+        if(ex_sensor_count >= 60)
+        {
+        	ex_sensor_count = 0U;
+        	memcpy(&ex_sensor_data, ercv, sizeof(ex_sensor_data));
+        }
 
         heartbeat ++;
 

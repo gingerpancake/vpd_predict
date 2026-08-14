@@ -36,13 +36,6 @@
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
 typedef enum {
-	LL_OK,
-	LL_BUSY,
-	LL_ERROR,
-	LL_TIMEOUT
-}LL_ERROR_HANDLER;
-
-typedef enum {
 	AI_OUT_TEMP,
 	AI_OUT_HUMI,
 }AI_PREDICT_OUTPUT_DATA;
@@ -72,7 +65,6 @@ typedef enum {
 
 ai_error err;
 volatile SYSTEM_STATUS system_status = RAIN_STOP;
-
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -211,18 +203,45 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
     {
-	  if(sequence_initialized != 0)					//fill ai sequence quickly when board (re)booted. run only once after (re)booting
-	  	  {
+	  if(rtc_wakeup_event == 0U)					//rtc wakeup check
+	  {
+		  HAL_PWR_EnterSLEEPMode(PWR_MAINREGULATOR_ON, PWR_SLEEPENTRY_WFI);
+	  }else
+	  {
+		  /* internal sensor read begin */
+		  rtc_wakeup_event = 0;
 
-	  	  }
+		  In_Sensor_Read();
 
-	  	  if(system_status == RAIN_DETECTED)			//if rain detected, run this codes
-	  	  {
+		  while(in_sensor_rx_ready == 0U)
+		  {
+			  __WFI();								//wait for rxcplitcallback ends
+		  }
 
-	  	  }else											//if no rains, run this code
-	  	  {
+		  in_sensor_rx_ready = 0U;
+		  /* internal sensor read end */
 
-	  	  }
+		  /* external sensor read begin */
+		  Ex_Sensor_Read();
+
+		  while(ex_sensor_rx_ready == 0U)
+		  {
+			  __WFI();								//wait for rxcplitcallback ends
+		  }
+
+		  ex_sensor_rx_ready = 0U;
+		  /* external sensor read end */
+
+		  /* fill ai_sequence quickly when mcu booted at first */
+
+		  /* fill sequence logic begin */
+		  if(sequence_initialized == 0)
+		  {
+
+		  }
+		  /* fill sequence logic end */
+	  }
+
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

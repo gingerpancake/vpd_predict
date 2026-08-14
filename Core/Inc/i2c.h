@@ -29,7 +29,7 @@ extern "C" {
 #include "main.h"
 
 /* USER CODE BEGIN Includes */
-
+#include "sensor.h"
 /* USER CODE END Includes */
 
 extern I2C_HandleTypeDef hi2c1;
@@ -41,9 +41,13 @@ extern volatile uint8_t i2c_error_event;
 extern volatile uint8_t in_sensor_rx_ready;
 extern volatile uint8_t ex_sensor_rx_ready;
 
+extern volatile uint8_t in_sensor_count;
+extern volatile uint8_t ex_sensor_count;
 
 extern volatile uint32_t i2c_error_code;
 
+extern volatile SENSOR_DATA in_sensor_data;
+extern volatile SENSOR_DATA ex_sensor_data;
 /* USER CODE END Private defines */
 
 void MX_I2C1_Init(void);
