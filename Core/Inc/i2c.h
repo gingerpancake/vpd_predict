@@ -46,8 +46,8 @@ extern volatile uint8_t ex_sensor_count;
 
 extern volatile uint32_t i2c_error_code;
 
-extern volatile SENSOR_DATA in_sensor_data;
-extern volatile SENSOR_DATA ex_sensor_data;
+extern SENSOR_DATA in_sensor_data;
+extern SENSOR_DATA ex_sensor_data;
 /* USER CODE END Private defines */
 
 void MX_I2C1_Init(void);

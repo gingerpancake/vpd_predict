@@ -34,8 +34,8 @@ volatile uint8_t ex_sensor_count = 0U;
 
 volatile uint32_t i2c_error_code;
 
-volatile SENSOR_DATA in_sensor_data;
-volatile SENSOR_DATA ex_sensor_data;
+SENSOR_DATA in_sensor_data;
+SENSOR_DATA ex_sensor_data;
 /* USER CODE END 0 */
 
 I2C_HandleTypeDef hi2c1;
