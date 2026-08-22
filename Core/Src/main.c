@@ -65,6 +65,7 @@ typedef enum {
 
 ai_error err;
 volatile SYSTEM_STATUS system_status = RAIN_STOP;
+AI_INPUT_DATA ai_input_data;
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -193,10 +194,12 @@ int main(void)
   MX_TIM7_Init();
   MX_IWDG_Init();
   MX_TIM16_Init();
+  MX_TIM15_Init();
   /* USER CODE BEGIN 2 */
   AI_Init();
   AI_Get_InOutputs();
   HAL_TIM_Base_Start_IT(&htim16);
+  HAL_TIM_Base_Start_IT(&htim15);
   /* USER CODE END 2 */
 
   /* Infinite loop */
