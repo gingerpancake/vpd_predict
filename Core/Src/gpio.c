@@ -131,7 +131,7 @@ void Motor_Forward_Rotation(void) {
 	HAL_GPIO_WritePin(MOTOR_FR_2_GPIO_Port, MOTOR_FR_2_Pin, SET);
 }
 
-void Motor_Borward_Rotation(void) {
+void Motor_Backward_Rotation(void) {
 	HAL_GPIO_WritePin(MOTOR_BR_1_GPIO_Port, MOTOR_FR_1_Pin, SET);
 	HAL_GPIO_WritePin(MOTOR_BR_2_GPIO_Port, MOTOR_FR_2_Pin, SET);
 	HAL_Delay(3000);
