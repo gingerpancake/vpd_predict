@@ -123,5 +123,19 @@ void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 2 */
+void Motor_Forward_Rotation(void) {
+	HAL_GPIO_WritePin(MOTOR_FR_1_GPIO_Port, MOTOR_FR_1_Pin, SET);
+	HAL_GPIO_WritePin(MOTOR_FR_2_GPIO_Port, MOTOR_FR_2_Pin, SET);
+	HAL_Delay(3000);
+	HAL_GPIO_WritePin(MOTOR_FR_1_GPIO_Port, MOTOR_FR_1_Pin, RESET);
+	HAL_GPIO_WritePin(MOTOR_FR_2_GPIO_Port, MOTOR_FR_2_Pin, SET);
+}
 
+void Motor_Borward_Rotation(void) {
+	HAL_GPIO_WritePin(MOTOR_BR_1_GPIO_Port, MOTOR_FR_1_Pin, SET);
+	HAL_GPIO_WritePin(MOTOR_BR_2_GPIO_Port, MOTOR_FR_2_Pin, SET);
+	HAL_Delay(3000);
+	HAL_GPIO_WritePin(MOTOR_BR_1_GPIO_Port, MOTOR_FR_1_Pin, RESET);
+	HAL_GPIO_WritePin(MOTOR_BR_2_GPIO_Port, MOTOR_FR_2_Pin, SET);
+}
 /* USER CODE END 2 */
