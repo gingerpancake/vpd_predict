@@ -36,6 +36,19 @@ volatile uint32_t i2c_error_code;
 
 SENSOR_DATA in_sensor_data;
 SENSOR_DATA ex_sensor_data;
+
+uint16_t in_temp_raw;
+uint16_t in_humi_raw;
+
+uint16_t ex_temp_raw;
+uint16_t ex_humi_raw;
+
+float in_temperature;
+float in_humidity;
+
+float ex_temperature;
+float ex_humidity;
+
 /* USER CODE END 0 */
 
 I2C_HandleTypeDef hi2c1;
@@ -345,6 +358,27 @@ void HAL_I2C_MasterRxCpltCallback(I2C_HandleTypeDef *hi2c)
         {
         	in_sensor_count = 0U;
         	memcpy(&in_sensor_data, ircv, sizeof(in_sensor_data));
+
+
+            in_sensor_data.temp_msb = ircv[0];
+            in_sensor_data.temp_lsb = ircv[1];
+            in_sensor_data.temp_crc = ircv[2];
+
+            in_sensor_data.humi_msb = ircv[3];
+            in_sensor_data.humi_lsb = ircv[4];
+            in_sensor_data.humi_crc = ircv[5];
+
+            in_temp_raw = ((uint16_t)in_sensor_data.temp_msb << 8)
+                        | in_sensor_data.temp_lsb;
+
+            in_humi_raw = ((uint16_t)in_sensor_data.humi_msb << 8)
+                        | in_sensor_data.humi_lsb;
+
+            in_temperature = -45.0f
+                           + (175.0f * (float)in_temp_raw / 65535.0f);
+
+            in_humidity = 100.0f
+                        * (float)in_humi_raw / 65535.0f;
         }
 
         heartbeat ++;
@@ -361,13 +395,32 @@ void HAL_I2C_MasterRxCpltCallback(I2C_HandleTypeDef *hi2c)
         	ex_sensor_count = 0U;
         	memcpy(&ex_sensor_data, ercv, sizeof(ex_sensor_data));
         }
+        ex_sensor_data.temp_msb = ercv[0];
+            ex_sensor_data.temp_lsb = ercv[1];
+            ex_sensor_data.temp_crc = ercv[2];
 
+            ex_sensor_data.humi_msb = ercv[3];
+            ex_sensor_data.humi_lsb = ercv[4];
+            ex_sensor_data.humi_crc = ercv[5];
+
+            ex_temp_raw = ((uint16_t)ex_sensor_data.temp_msb << 8)
+                        | ex_sensor_data.temp_lsb;
+
+            ex_humi_raw = ((uint16_t)ex_sensor_data.humi_msb << 8)
+                        | ex_sensor_data.humi_lsb;
+
+            ex_temperature = -45.0f
+                           + (175.0f * (float)ex_temp_raw / 65535.0f);
+
+            ex_humidity = 100.0f
+                        * (float)ex_humi_raw / 65535.0f;
+        }
+
+    	sensor_state = SENSOR_STATE_IDLE;
         heartbeat ++;
 
     }
 
-    sensor_state = SENSOR_STATE_IDLE;
-}
 
 /* USER CODE END 1 */
 
