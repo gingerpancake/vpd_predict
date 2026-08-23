@@ -212,7 +212,7 @@ int main(void)
 	  }else
 	  {
 		  /* internal sensor read begin */
-		  rtc_wakeup_event = 0;
+		  rtc_wakeup_event = 0U;
 
 		  In_Sensor_Read();
 
