@@ -241,6 +241,9 @@ int main(void)
 		  if(sequence_initialized == 0)
 		  {
 
+		  }else
+		  {
+
 		  }
 		  /* fill sequence logic end */
 	  }
