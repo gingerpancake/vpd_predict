@@ -22,7 +22,12 @@
 #include "gpio.h"
 
 /* USER CODE BEGIN 0 */
+typedef enum {
+	MOTOR_RUN,
+	MOTOR_STOP
+}MOTOR_STATUS;
 
+MOTOR_STATUS motor_status;
 /* USER CODE END 0 */
 
 /*----------------------------------------------------------------------------*/
@@ -124,18 +129,53 @@ void MX_GPIO_Init(void)
 
 /* USER CODE BEGIN 2 */
 void Motor_Forward_Rotation(void) {
+	if(motor_status != MOTOR_STOP)
+	{
+		return;
+	}
+
+	motor_status = MOTOR_RUN;
+
 	HAL_GPIO_WritePin(MOTOR_FR_1_GPIO_Port, MOTOR_FR_1_Pin, SET);
-	HAL_GPIO_WritePin(MOTOR_FR_2_GPIO_Port, MOTOR_FR_2_Pin, RESET);
+	HAL_GPIO_WritePin(MOTOR_FR_2_GPIO_Port, MOTOR_FR_2_Pin, SET);
 	HAL_Delay(3000);
-	HAL_GPIO_WritePin(MOTOR_FR_1_GPIO_Port, MOTOR_FR_1_Pin, SET);
+	HAL_GPIO_WritePin(MOTOR_FR_1_GPIO_Port, MOTOR_FR_1_Pin, RESET);
 	HAL_GPIO_WritePin(MOTOR_FR_2_GPIO_Port, MOTOR_FR_2_Pin, RESET);
+
+	motor_status = MOTOR_STOP;
 }
 
 void Motor_Backward_Rotation(void) {
+	if(motor_status != MOTOR_STOP)
+	{
+		return;
+	}
+
+	motor_status = MOTOR_RUN;
+
 	HAL_GPIO_WritePin(MOTOR_BR_1_GPIO_Port, MOTOR_FR_1_Pin, SET);
-	HAL_GPIO_WritePin(MOTOR_BR_2_GPIO_Port, MOTOR_FR_2_Pin, RESET);
+	HAL_GPIO_WritePin(MOTOR_BR_2_GPIO_Port, MOTOR_FR_2_Pin, SET);
 	HAL_Delay(3000);
-	HAL_GPIO_WritePin(MOTOR_BR_1_GPIO_Port, MOTOR_FR_1_Pin, SET);
+	HAL_GPIO_WritePin(MOTOR_BR_1_GPIO_Port, MOTOR_FR_1_Pin, RESET);
 	HAL_GPIO_WritePin(MOTOR_BR_2_GPIO_Port, MOTOR_FR_2_Pin, RESET);
+
+	motor_status = MOTOR_STOP;
+}
+
+void Motor_Rain_Close(void) {
+	if(motor_status != MOTOR_STOP)
+	{
+		return;
+	}
+
+	motor_status = MOTOR_RUN;
+
+	HAL_GPIO_WritePin(MOTOR_BR_1_GPIO_Port, MOTOR_BR_1_Pin, SET);
+	HAL_GPIO_WritePin(MOTOR_BR_2_GPIO_Port, MOTOR_BR_2_Pin, SET);
+	HAL_Delay(30000);
+	HAL_GPIO_WritePin(MOTOR_BR_1_GPIO_Port, MOTOR_BR_1_Pin, RESET);
+	HAL_GPIO_WritePin(MOTOR_BR_2_GPIO_Port, MOTOR_BR_2_Pin, RESET);
+
+	motor_status = MOTOR_STOP;
 }
 /* USER CODE END 2 */

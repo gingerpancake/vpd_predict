@@ -39,7 +39,9 @@ extern "C" {
 void MX_GPIO_Init(void);
 
 /* USER CODE BEGIN Prototypes */
-
+void Motor_Forward_Rotation(void);
+void Motor_Backward_Rotation(void);
+void Motor_Rain_Close(void);
 /* USER CODE END Prototypes */
 
 #ifdef __cplusplus

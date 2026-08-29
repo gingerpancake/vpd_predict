@@ -31,6 +31,7 @@
 #include "ai_platform.h"
 #include "network_data.h"
 #include "sensor.h"
+#include "string.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -136,6 +137,62 @@ float hour_cos;
 float month_sin;
 float month_cos;
 
+static const float inital_input[AI_NETWORK_IN_1_SIZE] = {
+    27.0f, 87.0f, 24.0f, 94.0f, 0.0f, 1.0f, -1.0f, -0.0f,
+    27.1f, 86.0f, 24.0f, 94.0f, 0.258819045f, 0.965925826f, -1.0f, -0.0f,
+    26.7f, 87.0f, 24.0f, 95.0f, 0.5f, 0.866025404f, -1.0f, -0.0f,
+    25.9f, 93.0f, 24.0f, 95.0f, 0.707106781f, 0.707106781f, -1.0f, -0.0f,
+    26.0f, 90.0f, 24.0f, 96.0f, 0.866025404f, 0.5f, -1.0f, -0.0f,
+    25.8f, 90.0f, 23.0f, 96.0f, 0.965925826f, 0.258819045f, -1.0f, -0.0f,
+    25.3f, 93.0f, 23.0f, 95.0f, 1.0f, 0.0f, -1.0f, -0.0f,
+    25.7f, 92.0f, 26.0f, 88.0f, 0.965925826f, -0.258819045f, -1.0f, -0.0f,
+
+    27.1f, 84.0f, 29.0f, 76.0f, 0.866025404f, -0.5f, -1.0f, -0.0f,
+    28.9f, 77.0f, 33.0f, 60.0f, 0.707106781f, -0.707106781f, -1.0f, -0.0f,
+    30.8f, 68.0f, 34.0f, 54.0f, 0.5f, -0.866025404f, -1.0f, -0.0f,
+    32.2f, 61.0f, 34.0f, 55.0f, 0.258819045f, -0.965925826f, -1.0f, -0.0f,
+    33.7f, 56.0f, 35.0f, 50.0f, 0.0f, -1.0f, -1.0f, -0.0f,
+    34.1f, 55.0f, 36.0f, 48.0f, -0.258819045f, -0.965925826f, -1.0f, -0.0f,
+    34.3f, 58.0f, 36.0f, 49.0f, -0.5f, -0.866025404f, -1.0f, -0.0f,
+    34.0f, 58.0f, 36.0f, 50.0f, -0.707106781f, -0.707106781f, -1.0f, -0.0f,
+
+    33.4f, 60.0f, 35.0f, 51.0f, -0.866025404f, -0.5f, -1.0f, -0.0f,
+    34.3f, 56.0f, 32.0f, 63.0f, -0.965925826f, -0.258819045f, -1.0f, -0.0f,
+    28.5f, 81.0f, 30.0f, 75.0f, -1.0f, -0.0f, -1.0f, -0.0f,
+    29.9f, 79.0f, 29.0f, 80.0f, -0.965925826f, 0.258819045f, -1.0f, -0.0f,
+    30.4f, 73.0f, 28.0f, 81.0f, -0.866025404f, 0.5f, -1.0f, -0.0f,
+    30.6f, 69.0f, 28.0f, 77.0f, -0.707106781f, 0.707106781f, -1.0f, -0.0f,
+    30.3f, 68.0f, 27.0f, 79.0f, -0.5f, 0.866025404f, -1.0f, -0.0f,
+    29.3f, 71.0f, 26.0f, 84.0f, -0.258819045f, 0.965925826f, -1.0f, -0.0f,
+
+    29.3f, 68.0f, 26.0f, 87.0f, 0.0f, 1.0f, -1.0f, -0.0f,
+    28.4f, 72.0f, 25.0f, 87.0f, 0.258819045f, 0.965925826f, -1.0f, -0.0f,
+    27.9f, 74.0f, 25.0f, 87.0f, 0.5f, 0.866025404f, -1.0f, -0.0f,
+    27.9f, 72.0f, 25.0f, 87.0f, 0.707106781f, 0.707106781f, -1.0f, -0.0f,
+    27.7f, 73.0f, 24.0f, 89.0f, 0.866025404f, 0.5f, -1.0f, -0.0f,
+    27.6f, 72.0f, 24.0f, 89.0f, 0.965925826f, 0.258819045f, -1.0f, -0.0f,
+    26.7f, 76.0f, 24.0f, 89.0f, 1.0f, 0.0f, -1.0f, -0.0f,
+    27.3f, 74.0f, 25.0f, 88.0f, 0.965925826f, -0.258819045f, -1.0f, -0.0f,
+
+    27.9f, 72.0f, 27.0f, 83.0f, 0.866025404f, -0.5f, -1.0f, -0.0f,
+    29.3f, 71.0f, 29.0f, 72.0f, 0.707106781f, -0.707106781f, -1.0f, -0.0f,
+    30.3f, 66.0f, 31.0f, 63.0f, 0.5f, -0.866025404f, -1.0f, -0.0f,
+    32.1f, 64.0f, 31.0f, 65.0f, 0.258819045f, -0.965925826f, -1.0f, -0.0f,
+    32.0f, 66.0f, 32.0f, 67.0f, 0.0f, -1.0f, -1.0f, -0.0f,
+    32.0f, 63.0f, 32.0f, 63.0f, -0.258819045f, -0.965925826f, -1.0f, -0.0f,
+    31.3f, 68.0f, 31.0f, 67.0f, -0.5f, -0.866025404f, -1.0f, -0.0f,
+    31.1f, 69.0f, 31.0f, 69.0f, -0.707106781f, -0.707106781f, -1.0f, -0.0f,
+
+    31.2f, 69.0f, 31.0f, 68.0f, -0.866025404f, -0.5f, -1.0f, -0.0f,
+    31.0f, 70.0f, 30.0f, 74.0f, -0.965925826f, -0.258819045f, -1.0f, -0.0f,
+    30.2f, 73.0f, 29.0f, 83.0f, -1.0f, -0.0f, -1.0f, -0.0f,
+    29.9f, 75.0f, 28.0f, 86.0f, -0.965925826f, 0.258819045f, -1.0f, -0.0f,
+    29.9f, 76.0f, 27.0f, 88.0f, -0.866025404f, 0.5f, -1.0f, -0.0f,
+    29.4f, 79.0f, 27.0f, 89.0f, -0.707106781f, 0.707106781f, -1.0f, -0.0f,
+    29.3f, 80.0f, 26.0f, 90.0f, -0.5f, 0.866025404f, -1.0f, -0.0f,
+    28.9f, 80.0f, 26.0f, 90.0f, -0.258819045f, 0.965925826f, -1.0f, -0.0f
+};
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -145,7 +202,7 @@ static void AI_Init(void);
 static void AI_Get_InOutputs(void);
 static void AI_Run(void);
 static void AI_Update_Sequence(AI_INPUT_DATA *new_data);
-static void AI_Init_Sequence(AI_INPUT_DATA *first_data);
+static void AI_Init_Sequence(void);
 float Vpd_Calculator(uint8_t temperature, uint8_t humidity);
 VPD_STATUS Get_Vpd_State(float vpd);
 static float Y_Inverse_Scale(float scaled_value, float scale, float min);
@@ -206,48 +263,13 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
     {
-	  if(rtc_wakeup_event == 0U)					//rtc wakeup check
+	  if (RAIN_DETECTED)
 	  {
-		  HAL_PWR_EnterSLEEPMode(PWR_MAINREGULATOR_ON, PWR_SLEEPENTRY_WFI);
+		  Motor_Rain_Close();
 	  }else
 	  {
-		  /* internal sensor read begin */
-		  rtc_wakeup_event = 0U;
-
-		  In_Sensor_Read();
-
-		  while(in_sensor_rx_ready == 0U)
-		  {
-			  __WFI();								//wait for rxcplitcallback ends
-		  }
-
-		  in_sensor_rx_ready = 0U;
-		  /* internal sensor read end */
-
-		  /* external sensor read begin */
-		  Ex_Sensor_Read();
-
-		  while(ex_sensor_rx_ready == 0U)
-		  {
-			  __WFI();								//wait for rxcplitcallback ends
-		  }
-
-		  ex_sensor_rx_ready = 0U;
-		  /* external sensor read end */
-
-		  /* fill ai_sequence quickly when mcu booted at first */
-
-		  /* fill sequence logic begin */
-		  if(sequence_initialized == 0)
-		  {
-
-		  }else
-		  {
-
-		  }
-		  /* fill sequence logic end */
+		  AI_Update_Sequence(&ai_input_data);
 	  }
-
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -383,6 +405,13 @@ static void AI_Run(void) {
 
 static void AI_Update_Sequence(AI_INPUT_DATA *new_data)
 {
+
+	if(sequence_initialized == 0)
+	{
+		AI_Init_Sequence();
+		return;
+	}
+
 	if(new_data == NULL)
 	{
 	    return;
@@ -391,12 +420,6 @@ static void AI_Update_Sequence(AI_INPUT_DATA *new_data)
 	X_Scale(new_data);
 
 	heartbeat ++;
-
-	if(sequence_initialized == 0)
-		{
-			AI_Init_Sequence(new_data);
-			return;
-		}
 
 	for(int i = 0; i < AI_NETWORK_IN_1_HEIGHT - 1; i++)
 	{
@@ -408,15 +431,11 @@ static void AI_Update_Sequence(AI_INPUT_DATA *new_data)
 
 }
 
-static void AI_Init_Sequence(AI_INPUT_DATA *first_data)
+static void AI_Init_Sequence(void)
 {
-	for(int i = 0; i < AI_NETWORK_IN_1_HEIGHT; i++)
-	{
-		sequence[i] = *first_data;
-	}
+	memcpy(sequence ,inital_input, sizeof(inital_input));
 
 	heartbeat ++;
-
 	sequence_initialized = 1;
 }
 
