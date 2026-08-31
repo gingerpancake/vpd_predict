@@ -257,17 +257,38 @@ int main(void)
   AI_Get_InOutputs();
   HAL_TIM_Base_Start_IT(&htim16);
   HAL_TIM_Base_Start_IT(&htim15);
+
+  HAL_StatusTypeDef sensor_status;
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
     {
-	  if (RAIN_DETECTED)
+	  if(rtc_wakeup_event == 0U)
+	  {
+		  __WFI();
+	  }
+
+	  if (system_status == RAIN_DETECTED)
 	  {
 		  Motor_Rain_Close();
 	  }else
 	  {
+		  sensor_status = In_Sensor_Read();
+
+		  while(in_sensor_rx_ready == 1U)
+		  {
+			  __WFI();
+		  }
+
+		  sensor_status = Ex_Sensor_Read();
+
+		  while(ex_sensor_rx_ready == 1U)
+		  {
+			  __WFI();
+		  }
+
 		  AI_Update_Sequence(&ai_input_data);
 	  }
     /* USER CODE END WHILE */
