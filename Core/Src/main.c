@@ -64,6 +64,12 @@ typedef enum {
 	VPD_TOO_HIGH
 }VPD_STATUS;
 
+typedef enum {
+	APP_OK = 0,
+	APP_ERR
+}APP_STATUS;
+
+APP_STATUS app_status;
 ai_error err;
 volatile SYSTEM_STATUS system_status = RAIN_STOP;
 AI_INPUT_DATA ai_input_data;
@@ -73,6 +79,10 @@ AI_INPUT_DATA ai_input_data;
 /* USER CODE BEGIN PD */
 #define VPD_IDEAL_MIN     0.8f
 #define VPD_IDEAL_MAX     1.2f
+
+#define IN_SENSOR_TIMEOUT_MS	500U
+#define EX_SENSOR_TIMEOUT_MS	500U
+#define MAX_CYCLE_FAILS        	3U
 
 //x_scaler value
 #define X_EX_TEMP			0.02136752f
@@ -136,6 +146,8 @@ float hour_cos;
 
 float month_sin;
 float month_cos;
+
+static uint32_t cycle_fail_count = 0U;
 
 static const float inital_input[AI_NETWORK_IN_1_SIZE] = {
     27.0f, 87.0f, 24.0f, 94.0f, 0.0f, 1.0f, -1.0f, -0.0f,
@@ -208,6 +220,10 @@ VPD_STATUS Get_Vpd_State(float vpd);
 static float Y_Inverse_Scale(float scaled_value, float scale, float min);
 static void X_Scale(AI_INPUT_DATA *data);
 static void RTC_Time_scale(AI_INPUT_DATA *data, float hour, float month);
+
+/*safe functions */
+static APP_STATUS Read_In_Sensor_Safe(void);
+static APP_STATUS Read_Ex_Sensor_Safe(void);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -258,7 +274,6 @@ int main(void)
   HAL_TIM_Base_Start_IT(&htim16);
   HAL_TIM_Base_Start_IT(&htim15);
 
-  HAL_StatusTypeDef sensor_status;
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -275,19 +290,49 @@ int main(void)
 		  Motor_Rain_Close();
 	  }else
 	  {
-		  sensor_status = In_Sensor_Read();
-
-		  while(in_sensor_rx_ready == 1U)
+		  /* in_sensor_read begin */
+		  for(uint8_t retry = 0U; retry < MAX_CYCLE_FAILS; retry ++)
 		  {
-			  __WFI();
+			  app_status = Read_In_Sensor_Safe();
+
+			  if(app_status == APP_ERR)
+			  {
+				  cycle_fail_count ++;
+			  }else
+			  {
+				  cycle_fail_count = 0U;
+				  break;
+			  }
+
 		  }
 
-		  sensor_status = Ex_Sensor_Read();
-
-		  while(ex_sensor_rx_ready == 1U)
+		  if(cycle_fail_count == MAX_CYCLE_FAILS)
 		  {
-			  __WFI();
+			  NVIC_SystemReset();
 		  }
+		  /* in_sensor_read end */
+
+		  /* ex_sensor_read begin */
+		  for(uint8_t retry = 0U; retry < MAX_CYCLE_FAILS; retry ++)
+		  {
+			  app_status = Read_Ex_Sensor_Safe();
+
+			  if(app_status == APP_ERR)
+			  {
+				  cycle_fail_count ++;
+			  }else
+			  {
+				  cycle_fail_count = 0U;
+				  break;
+			  }
+
+		  }
+
+		  if(cycle_fail_count == MAX_CYCLE_FAILS)
+		  {
+			  NVIC_SystemReset();
+		  }
+		  /* ex_sensor_read end */
 
 		  AI_Update_Sequence(&ai_input_data);
 	  }
@@ -363,8 +408,6 @@ float Vpd_Calculator(uint8_t temperature, uint8_t humidity) {
 	svp = 0.6108f * expf((17.27f * Temp) / (Temp + 237.3f));
 	vpd = svp * (1.0f - Humi / 100.0f);
 
-	heartbeat ++;
-
 	return vpd;
 }
 
@@ -375,8 +418,6 @@ VPD_STATUS Get_Vpd_State(float vpd) {
 	if (vpd <= 1.2f) return VPD_IDEAL;
 	if (vpd <= 1.4f) return VPD_HIGH;
 
-	heartbeat ++;
-
 	return VPD_TOO_HIGH;
 }
 
@@ -384,8 +425,6 @@ static void AI_Init(void) {
 	ai_handle act_addr[] = { AI_HANDLE_PTR(activations) };
 
 	err = ai_network_create_and_init(&network, act_addr, NULL);
-
-	heartbeat ++;
 
 	/* error debuging */
 	if(err.type != AI_ERROR_NONE)
@@ -403,16 +442,12 @@ static void AI_Get_InOutputs(void) {
 
 	ai_input[0].data = AI_HANDLE_PTR(sequence);
 	ai_output[0].data = AI_HANDLE_PTR(ai_output_size);
-
-	heartbeat ++;
 }
 
 static void AI_Run(void) {
 	ai_i32 batch;
 
 	batch = ai_network_run(network, ai_input, ai_output);
-
-	heartbeat ++;
 
 	if(batch != 1) {
 		err = ai_network_get_error(network);
@@ -440,8 +475,6 @@ static void AI_Update_Sequence(AI_INPUT_DATA *new_data)
 
 	X_Scale(new_data);
 
-	heartbeat ++;
-
 	for(int i = 0; i < AI_NETWORK_IN_1_HEIGHT - 1; i++)
 	{
 		sequence[i] = sequence[i + 1];
@@ -456,15 +489,12 @@ static void AI_Init_Sequence(void)
 {
 	memcpy(sequence ,inital_input, sizeof(inital_input));
 
-	heartbeat ++;
 	sequence_initialized = 1;
 }
 
 static float Y_Inverse_Scale(float scaled_value, float scale, float min) {
 
 	return (scaled_value - min) / scale;
-
-	heartbeat ++;
 }
 
 static void X_Scale(AI_INPUT_DATA *data) {
@@ -483,8 +513,6 @@ static void X_Scale(AI_INPUT_DATA *data) {
     data->month_sin = data->month_sin * X_MONTH_SIN + X_MONTH_SIN_MIN;
 
     data->month_cos = data->month_cos * X_MONTH_COS + X_MONTH_COS_MIN;
-
-    heartbeat ++;
 
 }
 
@@ -508,8 +536,59 @@ static void RTC_Time_scale(AI_INPUT_DATA *data, float hour, float month) {
     data->month_cos =
         cosf(2.0f * M_PI * (float)sDate.Month / 12.0f);
 
-    heartbeat ++;
 }
+
+/* safe functions begin */
+static APP_STATUS Read_In_Sensor_Safe(void) {
+
+	uint32_t current = HAL_GetTick();
+
+	in_sensor_rx_ready = 0U;
+
+	if (In_Sensor_Read() != HAL_OK)
+	{
+		return APP_ERR;
+	}
+
+	while(in_sensor_rx_ready == 0U)
+	{
+		__WFI();
+
+		if(i2c_error_event || (HAL_GetTick() - current > IN_SENSOR_TIMEOUT_MS))
+		{
+			 i2c_error_event = 0U;
+			 sensor_state = SENSOR_STATE_IDLE;
+			 return APP_ERR;
+		}
+	}
+	return APP_OK;
+}
+
+static APP_STATUS Read_Ex_Sensor_Safe(void) {
+	uint32_t current = HAL_GetTick();
+
+	in_sensor_rx_ready = 0U;
+
+	if (Ex_Sensor_Read() != HAL_OK)
+	{
+		return APP_ERR;
+	}
+
+	while(ex_sensor_rx_ready == 0U)
+	{
+		__WFI();
+
+		if(i2c_error_event || (HAL_GetTick() - current > EX_SENSOR_TIMEOUT_MS))
+		{
+			i2c_error_event = 0U;
+			sensor_state = SENSOR_STATE_IDLE;
+			return APP_ERR;
+		}
+	}
+	return APP_OK;
+
+}
+
 /* USER CODE END 4 */
 
 /**

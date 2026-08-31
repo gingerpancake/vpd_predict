@@ -22,12 +22,7 @@
 #include "gpio.h"
 
 /* USER CODE BEGIN 0 */
-typedef enum {
-	MOTOR_RUN,
-	MOTOR_STOP
-}MOTOR_STATUS;
-
-MOTOR_STATUS motor_status;
+static MOTOR_STATUS motor_status;
 /* USER CODE END 0 */
 
 /*----------------------------------------------------------------------------*/
@@ -177,5 +172,10 @@ void Motor_Rain_Close(void) {
 	HAL_GPIO_WritePin(MOTOR_BR_2_GPIO_Port, MOTOR_BR_2_Pin, RESET);
 
 	motor_status = MOTOR_STOP;
+}
+
+MOTOR_STATUS Motor_Get_Status(void)
+{
+    return motor_status;
 }
 /* USER CODE END 2 */

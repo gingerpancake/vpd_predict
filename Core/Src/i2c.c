@@ -295,9 +295,6 @@ void HAL_I2C_MasterTxCpltCallback(I2C_HandleTypeDef *hi2c) {
 		{
 			return;
 		}
-
-		heartbeat ++;
-
 	}
 
 	if(hi2c->Instance == I2C3)
@@ -308,9 +305,6 @@ void HAL_I2C_MasterTxCpltCallback(I2C_HandleTypeDef *hi2c) {
 		{
 			return;
 		}
-
-		heartbeat ++;
-
 	}
 }
 
@@ -372,9 +366,6 @@ void HAL_I2C_MasterRxCpltCallback(I2C_HandleTypeDef *hi2c)
 
             in_humidity = 100.0f * (float)in_humi_raw / 65535.0f;
         }
-
-        heartbeat ++;
-
     }
     else if (sensor_state == SENSOR_STATE_EX_WAIT)
     {
@@ -404,8 +395,6 @@ void HAL_I2C_MasterRxCpltCallback(I2C_HandleTypeDef *hi2c)
     }
 
     	sensor_state = SENSOR_STATE_IDLE;
-        heartbeat ++;
-
     }
 
 
