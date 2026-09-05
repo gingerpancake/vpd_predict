@@ -292,7 +292,7 @@ int main(void)
 	  }else
 	  {
 		  /* in_sensor_read begin */
-		  /*for(uint8_t retry = 0U; retry < MAX_CYCLE_FAILS; retry ++)
+		  for(uint8_t retry = 0U; retry < MAX_CYCLE_FAILS; retry ++)
 		  {
 			  app_status = Read_In_Sensor_Safe();
 
@@ -314,7 +314,7 @@ int main(void)
 		  /* in_sensor_read end */
 
 		  /* ex_sensor_read begin */
-		  /*for(uint8_t retry = 0U; retry < MAX_CYCLE_FAILS; retry ++)
+		  for(uint8_t retry = 0U; retry < MAX_CYCLE_FAILS; retry ++)
 		  {
 			  app_status = Read_Ex_Sensor_Safe();
 
@@ -336,11 +336,11 @@ int main(void)
 		  /* ex_sensor_read end */
 
 		  /* get_sensor_data from in,ex temperature and humidity, current time begin */
-		  /*Sensor_Data_to_Ai_Data(&ai_input_data);
+		  Sensor_Data_to_Ai_Data(&ai_input_data);
 		  /* get_sensor_data from in,ex temperature and humidity, current time end */
 
 		  /* ai_update_sequence begin*/
-		  /*AI_Update_Sequence(&ai_input_data);
+		  AI_Update_Sequence(&ai_input_data);
 		  /* ai_update_sequence end */
 	  }
     /* USER CODE END WHILE */
