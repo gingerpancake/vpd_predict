@@ -334,7 +334,13 @@ int main(void)
 		  }
 		  /* ex_sensor_read end */
 
+		  /* get_sensor_data from in,ex temperature and humidity, current time begin */
+
+		  /* get_sensor_data from in,ex temperature and humidity, current time end */
+
+		  /* ai_update_sequence begin*/
 		  AI_Update_Sequence(&ai_input_data);
+		  /* ai_update_sequence end */
 	  }
     /* USER CODE END WHILE */
 
