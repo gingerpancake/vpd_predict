@@ -567,7 +567,7 @@ static APP_STATUS Read_In_Sensor_Safe(void) {
 static APP_STATUS Read_Ex_Sensor_Safe(void) {
 	uint32_t current = HAL_GetTick();
 
-	in_sensor_rx_ready = 0U;
+	ex_sensor_rx_ready = 0U;
 
 	if (Ex_Sensor_Read() != HAL_OK)
 	{
