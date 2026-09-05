@@ -21,6 +21,9 @@
 #include "rtc.h"
 
 /* USER CODE BEGIN 0 */
+#define RTC_BACKUP_MAGIC          0x56504431U /* "VPD1" */
+#define RTC_BACKUP_MAGIC_REGISTER RTC_BKP_DR0
+
 volatile uint8_t rtc_wakeup_event = 0U;
 /* USER CODE END 0 */
 
@@ -57,7 +60,9 @@ void MX_RTC_Init(void)
   }
 
   /* USER CODE BEGIN Check_RTC_BKUP */
-
+  HAL_PWR_EnableBkUpAccess();
+  if (HAL_RTCEx_BKUPRead(&hrtc, RTC_BACKUP_MAGIC_REGISTER) != RTC_BACKUP_MAGIC)
+  {
   /* USER CODE END Check_RTC_BKUP */
 
   /** Initialize RTC and set the Time and Date
@@ -81,10 +86,14 @@ void MX_RTC_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN RTC_Init 2 */
+    HAL_RTCEx_BKUPWrite(&hrtc, RTC_BACKUP_MAGIC_REGISTER, RTC_BACKUP_MAGIC);
+  }
+
   if (HAL_RTCEx_SetWakeUpTimer_IT(&hrtc, 59U, RTC_WAKEUPCLOCK_CK_SPRE_16BITS) != HAL_OK)
   {
       Error_Handler();
   }
+  HAL_PWR_DisableBkUpAccess();
   /* USER CODE END RTC_Init 2 */
 
 }
