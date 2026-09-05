@@ -236,10 +236,10 @@ void EXTI1_IRQHandler(void)
 
 		if(LL_GPIO_IsInputPinSet(RAIN_DETECTION_GPIO_Port, RAIN_DETECTION_Pin))
 		{
-			system_status = RAIN_DETECTED;
+			system_status = RAIN_STOP;
 		}else
 		{
-			system_status = RAIN_STOP;
+			system_status = RAIN_DETECTED;
 		}
 	}
   /* USER CODE END EXTI1_IRQn 0 */
