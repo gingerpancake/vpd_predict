@@ -22,7 +22,8 @@
 #include "gpio.h"
 
 /* USER CODE BEGIN 0 */
-static MOTOR_STATUS motor_status;
+static MOTOR_STATUS motor_status = MOTOR_STOP;
+
 /* USER CODE END 0 */
 
 /*----------------------------------------------------------------------------*/
@@ -148,11 +149,11 @@ void Motor_Backward_Rotation(void) {
 
 	motor_status = MOTOR_RUN;
 
-	HAL_GPIO_WritePin(MOTOR_BR_1_GPIO_Port, MOTOR_FR_1_Pin, SET);
-	HAL_GPIO_WritePin(MOTOR_BR_2_GPIO_Port, MOTOR_FR_2_Pin, SET);
+	HAL_GPIO_WritePin(MOTOR_BR_1_GPIO_Port, MOTOR_BR_1_Pin, SET);
+	HAL_GPIO_WritePin(MOTOR_BR_2_GPIO_Port, MOTOR_BR_2_Pin, SET);
 	HAL_Delay(3000);
-	HAL_GPIO_WritePin(MOTOR_BR_1_GPIO_Port, MOTOR_FR_1_Pin, RESET);
-	HAL_GPIO_WritePin(MOTOR_BR_2_GPIO_Port, MOTOR_FR_2_Pin, RESET);
+	HAL_GPIO_WritePin(MOTOR_BR_1_GPIO_Port, MOTOR_BR_1_Pin, RESET);
+	HAL_GPIO_WritePin(MOTOR_BR_2_GPIO_Port, MOTOR_BR_2_Pin, RESET);
 
 	motor_status = MOTOR_STOP;
 }
