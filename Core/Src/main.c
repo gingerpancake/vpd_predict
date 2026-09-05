@@ -219,7 +219,8 @@ float Vpd_Calculator(uint8_t temperature, uint8_t humidity);
 VPD_STATUS Get_Vpd_State(float vpd);
 static float Y_Inverse_Scale(float scaled_value, float scale, float min);
 static void X_Scale(AI_INPUT_DATA *data);
-static void RTC_Time_scale(AI_INPUT_DATA *data, float hour, float month);
+static void RTC_Time_scale(AI_INPUT_DATA *data);
+static void Sensor_Data_to_Ai_Data(AI_INPUT_DATA *sensor_data);
 
 /*safe functions */
 static APP_STATUS Read_In_Sensor_Safe(void);
@@ -522,7 +523,7 @@ static void X_Scale(AI_INPUT_DATA *data) {
 
 }
 
-static void RTC_Time_scale(AI_INPUT_DATA *data, float hour, float month) {
+static void RTC_Time_scale(AI_INPUT_DATA *data) {
 
 	RTC_TimeTypeDef sTime;
 	RTC_DateTypeDef sDate;
@@ -593,6 +594,16 @@ static APP_STATUS Read_Ex_Sensor_Safe(void) {
 	}
 	return APP_OK;
 
+}
+
+static void Sensor_Data_to_Ai_Data(AI_INPUT_DATA *sensor_data)
+{
+	ai_input_data.in_temp = in_temperature;
+	ai_input_data.in_humi = in_humidity;
+	ai_input_data.ex_temp = ex_temperature;
+	ai_input_data.ex_humi = ex_humidity;
+
+	RTC_Time_scale(&ai_input_data);
 }
 
 /* USER CODE END 4 */
