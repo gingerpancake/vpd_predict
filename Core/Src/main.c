@@ -292,7 +292,7 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
     {
-	  if(rtc_wakeup_event == 0U)
+	  while(rtc_wakeup_event == 1)
 	  {
 		  __WFI();
 	  }
