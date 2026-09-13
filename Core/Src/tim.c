@@ -29,7 +29,6 @@
 volatile uint32_t heartbeat = 0;
 volatile uint32_t last_heartbeat = 0;
 
-volatile TIMER_STATUS timer_status = TIMER_IDELE;
 /* USER CODE END 0 */
 
 TIM_HandleTypeDef htim2;
@@ -483,8 +482,12 @@ void User_Timer(uint32_t ms)
 
 	if(status != HAL_OK)
 	{
-		timer_status = HAL_BUSY;
-		__disable_irq();
+		HAL_GPIO_WritePin(MOTOR_BR_1_GPIO_Port, MOTOR_BR_1_Pin, RESET);
+		HAL_GPIO_WritePin(MOTOR_BR_2_GPIO_Port, MOTOR_BR_2_Pin, RESET);
+		HAL_GPIO_WritePin(MOTOR_FR_1_GPIO_Port, MOTOR_FR_1_Pin, RESET);
+		HAL_GPIO_WritePin(MOTOR_FR_2_GPIO_Port, MOTOR_FR_2_Pin, RESET);
+
+		HAL_TIM_Base_Stop_IT(&htim2);
 		return;
 	}
 }

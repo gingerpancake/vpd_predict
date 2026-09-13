@@ -46,12 +46,6 @@ extern TIM_HandleTypeDef htim16;
 extern volatile uint32_t heartbeat;
 extern volatile uint32_t last_heartbeat;
 
-typedef enum {
-	TIMER_BUSY,
-	TIMER_IDELE
-}TIMER_STATUS;
-
-extern volatile TIMER_STATUS timer_status;
 /* USER CODE END Private defines */
 
 void MX_TIM2_Init(void);
