@@ -32,6 +32,8 @@ extern "C" {
 
 /* USER CODE END Includes */
 
+extern TIM_HandleTypeDef htim2;
+
 extern TIM_HandleTypeDef htim6;
 
 extern TIM_HandleTypeDef htim7;
@@ -53,13 +55,14 @@ typedef enum {
 extern TIMER_STATUS timer_status;
 /* USER CODE END Private defines */
 
+void MX_TIM2_Init(void);
 void MX_TIM6_Init(void);
 void MX_TIM7_Init(void);
 void MX_TIM15_Init(void);
 void MX_TIM16_Init(void);
 
 /* USER CODE BEGIN Prototypes */
-void Systic_Timer(int ms);
+void User_Timer(uint32_t ms);
 /* USER CODE END Prototypes */
 
 #ifdef __cplusplus

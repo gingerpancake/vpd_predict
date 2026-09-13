@@ -280,6 +280,7 @@ int main(void)
   MX_IWDG_Init();
   MX_TIM16_Init();
   MX_TIM15_Init();
+  MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
   AI_Init();
   AI_Get_InOutputs();
@@ -834,6 +835,7 @@ static void Sensor_Data_to_Ai_Data(AI_INPUT_DATA *sensor_data)
 
 	RTC_Time_scale(&ai_input_data);
 }
+
 /* USER CODE END 4 */
 
 /**

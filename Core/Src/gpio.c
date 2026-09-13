@@ -24,7 +24,7 @@
 /* USER CODE BEGIN 0 */
 #include "tim.h"
 
-static MOTOR_STATUS motor_status = MOTOR_STOP;
+MOTOR_STATUS motor_status = MOTOR_STOP;
 
 /* USER CODE END 0 */
 
@@ -132,15 +132,11 @@ void Motor_Forward_Rotation(void) {
 		return;
 	}
 
-	motor_status = MOTOR_RUN;
+	motor_status = MOTOR_FW_RUN;
 
 	HAL_GPIO_WritePin(MOTOR_FR_1_GPIO_Port, MOTOR_FR_1_Pin, SET);
 	HAL_GPIO_WritePin(MOTOR_FR_2_GPIO_Port, MOTOR_FR_2_Pin, SET);
-	Systic_Timer(3000);
-	HAL_GPIO_WritePin(MOTOR_FR_1_GPIO_Port, MOTOR_FR_1_Pin, RESET);
-	HAL_GPIO_WritePin(MOTOR_FR_2_GPIO_Port, MOTOR_FR_2_Pin, RESET);
-
-	motor_status = MOTOR_STOP;
+	User_Timer(3000);
 }
 
 void Motor_Backward_Rotation(void) {
@@ -149,15 +145,11 @@ void Motor_Backward_Rotation(void) {
 		return;
 	}
 
-	motor_status = MOTOR_RUN;
+	motor_status = MOTOR_BW_RUN;
 
 	HAL_GPIO_WritePin(MOTOR_BR_1_GPIO_Port, MOTOR_BR_1_Pin, SET);
 	HAL_GPIO_WritePin(MOTOR_BR_2_GPIO_Port, MOTOR_BR_2_Pin, SET);
-	Systic_Timer(3000);
-	HAL_GPIO_WritePin(MOTOR_BR_1_GPIO_Port, MOTOR_BR_1_Pin, RESET);
-	HAL_GPIO_WritePin(MOTOR_BR_2_GPIO_Port, MOTOR_BR_2_Pin, RESET);
-
-	motor_status = MOTOR_STOP;
+	User_Timer(3000);
 }
 
 void Motor_Emergency_Close(void) {
@@ -166,15 +158,11 @@ void Motor_Emergency_Close(void) {
 		return;
 	}
 
-	motor_status = MOTOR_RUN;
+	motor_status = MOTOR_BW_EM_RUN;
 
 	HAL_GPIO_WritePin(MOTOR_BR_1_GPIO_Port, MOTOR_BR_1_Pin, SET);
 	HAL_GPIO_WritePin(MOTOR_BR_2_GPIO_Port, MOTOR_BR_2_Pin, SET);
-	Systic_Timer(30000);
-	HAL_GPIO_WritePin(MOTOR_BR_1_GPIO_Port, MOTOR_BR_1_Pin, RESET);
-	HAL_GPIO_WritePin(MOTOR_BR_2_GPIO_Port, MOTOR_BR_2_Pin, RESET);
-
-	motor_status = MOTOR_STOP;
+	User_Timer(30000);
 }
 
 void Motor_Emergency_Open(void) {
@@ -183,19 +171,11 @@ void Motor_Emergency_Open(void) {
 		return;
 	}
 
-	motor_status = MOTOR_RUN;
+	motor_status = MOTOR_FW_EM_RUN;
 
 	HAL_GPIO_WritePin(MOTOR_FR_1_GPIO_Port, MOTOR_FR_1_Pin, SET);
 	HAL_GPIO_WritePin(MOTOR_FR_2_GPIO_Port, MOTOR_FR_2_Pin, SET);
-	Systic_Timer(30000);
-	HAL_GPIO_WritePin(MOTOR_FR_1_GPIO_Port, MOTOR_FR_1_Pin, RESET);
-	HAL_GPIO_WritePin(MOTOR_FR_2_GPIO_Port, MOTOR_FR_2_Pin, RESET);
-
-	motor_status = MOTOR_STOP;
+	User_Timer(30000);
 }
 
-MOTOR_STATUS Motor_Get_Status(void)
-{
-    return motor_status;
-}
 /* USER CODE END 2 */

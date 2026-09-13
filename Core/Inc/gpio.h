@@ -34,11 +34,14 @@ extern "C" {
 
 /* USER CODE BEGIN Private defines */
 typedef enum {
-	MOTOR_RUN,
+	MOTOR_FW_RUN,
+	MOTOR_BW_RUN,
+	MOTOR_FW_EM_RUN,
+	MOTOR_BW_EM_RUN,
 	MOTOR_STOP
 }MOTOR_STATUS;
 
-MOTOR_STATUS Motor_Get_Status(void);
+extern MOTOR_STATUS motor_status;
 /* USER CODE END Private defines */
 
 void MX_GPIO_Init(void);
