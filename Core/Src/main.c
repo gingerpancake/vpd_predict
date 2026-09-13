@@ -385,6 +385,7 @@ int main(void)
 
 		  fvpd = Vpd_Calculator(ai_output_data[0], ai_output_data[1]);
 		  /* ai_run end */
+		  wakeup_num = 0;
 		  }
 
 		  /* vpd status update */
@@ -432,7 +433,6 @@ int main(void)
 		  /* motor logic begin */
 		  switch(vpd_status) {
 		  	  case NORMAL:
-		  		  return 0;
 		  		  break;
 
 		  	  case PRE_IDEAL_CUR_MAX_OUT:
@@ -471,11 +471,13 @@ int main(void)
 		  	  default:
 		  		  break;
 		  }
-		  /* motor logic begin */
+		  /* motor logic end */
+
 	  }
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+	  rtc_wakeup_event = 0U;
     }
   /* USER CODE END 3 */
 }
