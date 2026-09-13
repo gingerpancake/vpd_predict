@@ -158,7 +158,7 @@ void Motor_Backward_Rotation(void) {
 	motor_status = MOTOR_STOP;
 }
 
-void Motor_Rain_Close(void) {
+void Motor_Emergency_Close(void) {
 	if(motor_status != MOTOR_STOP)
 	{
 		return;
@@ -171,6 +171,23 @@ void Motor_Rain_Close(void) {
 	HAL_Delay(30000);
 	HAL_GPIO_WritePin(MOTOR_BR_1_GPIO_Port, MOTOR_BR_1_Pin, RESET);
 	HAL_GPIO_WritePin(MOTOR_BR_2_GPIO_Port, MOTOR_BR_2_Pin, RESET);
+
+	motor_status = MOTOR_STOP;
+}
+
+void Motor_Emergency_Open(void) {
+	if(motor_status != MOTOR_STOP)
+	{
+		return;
+	}
+
+	motor_status = MOTOR_RUN;
+
+	HAL_GPIO_WritePin(MOTOR_FR_1_GPIO_Port, MOTOR_FR_1_Pin, SET);
+	HAL_GPIO_WritePin(MOTOR_FR_2_GPIO_Port, MOTOR_FR_2_Pin, SET);
+	HAL_Delay(30000);
+	HAL_GPIO_WritePin(MOTOR_FR_1_GPIO_Port, MOTOR_FR_1_Pin, RESET);
+	HAL_GPIO_WritePin(MOTOR_FR_2_GPIO_Port, MOTOR_FR_2_Pin, RESET);
 
 	motor_status = MOTOR_STOP;
 }
