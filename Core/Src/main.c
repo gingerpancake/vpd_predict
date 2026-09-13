@@ -292,13 +292,140 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
     {
-	  while(rtc_wakeup_event == 1)
+	  while(rtc_wakeup_event == 0)
 	  {
 		  __WFI();
 	  }
 
 	  if (system_status == RAIN_DETECTED)
 	  {
+		  /* in_sensor_read begin */
+		  for(uint8_t retry = 0U; retry < MAX_CYCLE_FAILS; retry ++)
+		  {
+			  app_status = Read_In_Sensor_Safe();
+
+			  if(app_status == APP_ERR)
+			  {
+				  cycle_fail_count ++;
+			  }else
+			  {
+				  cycle_fail_count = 0U;
+				  break;
+			  }
+
+		  }
+
+		  if(cycle_fail_count == MAX_CYCLE_FAILS)
+		  {
+			  NVIC_SystemReset();
+		  }
+		  /* in_sensor_read end */
+
+		  /* ex_sensor_read begin */
+		  for(uint8_t retry = 0U; retry < MAX_CYCLE_FAILS; retry ++)
+		  {
+			  app_status = Read_Ex_Sensor_Safe();
+
+			  if(app_status == APP_ERR)
+			  {
+				  cycle_fail_count ++;
+			  }else
+			  {
+				  cycle_fail_count = 0U;
+				  break;
+			  }
+
+		  }
+
+		  if(cycle_fail_count == MAX_CYCLE_FAILS)
+		  {
+			  NVIC_SystemReset();
+		  }
+		  /* ex_sensor_read end */
+
+		  /* measuring currnet vpd */
+		  if(pvpd == 0)
+		  {
+			  cvpd = Vpd_Calculator(in_temperature, in_humidity);
+			  pvpd = cvpd;
+		  }else
+		  {
+			  pvpd = cvpd;
+			  cvpd = Vpd_Calculator(in_temperature, in_humidity);
+		  }
+		  /* measuring currnet vpd */
+
+		  /* emergency(over limit temperature) motor control begin */
+		  if(in_temperature > MAX_LIMIT_TEMP)
+		  {
+			  Motor_Emergency_Open();
+		  }else if(in_temperature < MIN_LIMIT_TEMP)
+		  {
+			  Motor_Emergency_Close();
+		  }
+		  /* emergency(over limit temperature) motor control end */
+
+		  if(wakeup_num == 60)
+		  {
+		  /* get_sensor_data from in,ex temperature and humidity, current time begin */
+		  Sensor_Data_to_Ai_Data(&ai_input_data);
+		  /* get_sensor_data from in,ex temperature and humidity, current time end */
+
+		  /* ai_update_sequence begin*/
+		  AI_Update_Sequence(&ai_input_data);
+		  /* ai_update_sequence end */
+
+		  /* ai_run begin */
+		  AI_Run();
+
+		  Y_Inverse_Scale(ai_output_data);
+
+		  fvpd = Vpd_Calculator(ai_output_data[0], ai_output_data[1]);
+		  /* ai_run end */
+		  wakeup_num = 0;
+		  }
+
+		  /* vpd status update */
+
+
+		  if(fvpd > VPD_IDEAL_MAX)
+		  {
+			  if(cvpd > pvpd)
+			  {
+				  vpd_status = PRE_MAX_OUT_CUR_INC;
+			  }else if(cvpd < pvpd)
+			  {
+				  vpd_status = PRE_MAX_OUT_CUR_DEC;
+			  }else if (cvpd == pvpd)
+			  {
+				  vpd_status = PRE_MAX_OUT_CUR_NMV;
+			  }
+		  }else if(fvpd < VPD_IDEAL_MIN)
+		  {
+			if(cvpd > pvpd)
+			{
+				  vpd_status = PRE_MIN_OUT_CUR_INC;
+			}else if(cvpd < pvpd)
+			{
+				  vpd_status = PRE_MIN_OUT_CUR_DEC;
+			}else if(cvpd == pvpd)
+			{
+				  vpd_status = PRE_MIN_OUT_CUR_NMV;
+			}
+		  }else if(VPD_IDEAL_MIN <= fvpd && fvpd <= VPD_IDEAL_MAX)
+		  {
+			  if(cvpd > VPD_IDEAL_MAX)
+			  {
+				  vpd_status = PRE_IDEAL_CUR_MAX_OUT;
+			  }else if(cvpd < VPD_IDEAL_MIN)
+			  {
+				  vpd_status = PRE_IDEAL_CUR_MIN_OUT;
+			  }else
+			  {
+				  vpd_status = NORMAL;
+			  }
+		  }
+		  /* vpd status update */
 		  Motor_Emergency_Close();
 	  }else
 	  {

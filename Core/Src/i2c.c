@@ -348,24 +348,22 @@ void HAL_I2C_MasterRxCpltCallback(I2C_HandleTypeDef *hi2c)
 
         in_sensor_count ++;
 
-        if(in_sensor_count >= 60)
-        {
-        	in_sensor_count = 0U;
-        	in_sensor_data.temp_msb = ircv[0];
-        	in_sensor_data.temp_lsb = ircv[1];
-        	in_sensor_data.temp_crc = ircv[2];
-        	in_sensor_data.humi_msb = ircv[3];
-        	in_sensor_data.humi_lsb = ircv[4];
-        	in_sensor_data.humi_crc = ircv[5];
+        in_sensor_count = 0U;
+        in_sensor_data.temp_msb = ircv[0];
+        in_sensor_data.temp_lsb = ircv[1];
+        in_sensor_data.temp_crc = ircv[2];
+        in_sensor_data.humi_msb = ircv[3];
+        in_sensor_data.humi_lsb = ircv[4];
+        in_sensor_data.humi_crc = ircv[5];
 
-            in_temp_raw = ((uint16_t)in_sensor_data.temp_msb << 8) | in_sensor_data.temp_lsb;
+        in_temp_raw = ((uint16_t)in_sensor_data.temp_msb << 8) | in_sensor_data.temp_lsb;
 
-            in_humi_raw = ((uint16_t)in_sensor_data.humi_msb << 8) | in_sensor_data.humi_lsb;
+        in_humi_raw = ((uint16_t)in_sensor_data.humi_msb << 8) | in_sensor_data.humi_lsb;
 
-            in_temperature = -45.0f + (175.0f * (float)in_temp_raw / 65535.0f);
+        in_temperature = -45.0f + (175.0f * (float)in_temp_raw / 65535.0f);
 
-            in_humidity = 100.0f * (float)in_humi_raw / 65535.0f;
-        }
+        in_humidity = 100.0f * (float)in_humi_raw / 65535.0f;
+
     }
     else if (sensor_state == SENSOR_STATE_EX_WAIT)
     {
@@ -373,24 +371,22 @@ void HAL_I2C_MasterRxCpltCallback(I2C_HandleTypeDef *hi2c)
 
         ex_sensor_count ++;
 
-        if(ex_sensor_count >= 60)
-        {
-        	ex_sensor_count = 0U;
-        	ex_sensor_data.temp_msb = ercv[0];
-        	ex_sensor_data.temp_lsb = ercv[1];
-        	ex_sensor_data.temp_crc = ercv[2];
-        	ex_sensor_data.humi_msb = ercv[3];
-        	ex_sensor_data.humi_lsb = ercv[4];
-        	ex_sensor_data.humi_crc = ercv[5];
+        ex_sensor_count = 0U;
+        ex_sensor_data.temp_msb = ercv[0];
+        ex_sensor_data.temp_lsb = ercv[1];
+        ex_sensor_data.temp_crc = ercv[2];
+        ex_sensor_data.humi_msb = ercv[3];
+        ex_sensor_data.humi_lsb = ercv[4];
+        ex_sensor_data.humi_crc = ercv[5];
 
-        	ex_temp_raw = ((uint16_t)ex_sensor_data.temp_msb << 8) | ex_sensor_data.temp_lsb;
+        ex_temp_raw = ((uint16_t)ex_sensor_data.temp_msb << 8) | ex_sensor_data.temp_lsb;
 
-        	ex_humi_raw = ((uint16_t)ex_sensor_data.humi_msb << 8) | ex_sensor_data.humi_lsb;
+        ex_humi_raw = ((uint16_t)ex_sensor_data.humi_msb << 8) | ex_sensor_data.humi_lsb;
 
-        	ex_temperature = -45.0f + (175.0f * (float)ex_temp_raw / 65535.0f);
+        ex_temperature = -45.0f + (175.0f * (float)ex_temp_raw / 65535.0f);
 
-        	ex_humidity = 100.0f * (float)ex_humi_raw / 65535.0f;
-        }
+        ex_humidity = 100.0f * (float)ex_humi_raw / 65535.0f;
+
 
     }
 
