@@ -487,7 +487,8 @@ void User_Timer(uint32_t ms)
 		HAL_GPIO_WritePin(MOTOR_FR_1_GPIO_Port, MOTOR_FR_1_Pin, RESET);
 		HAL_GPIO_WritePin(MOTOR_FR_2_GPIO_Port, MOTOR_FR_2_Pin, RESET);
 
-		HAL_TIM_Base_Stop_IT(&htim2);
+		motor_status = MOTOR_STOP;
+
 		return;
 	}
 }
