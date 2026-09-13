@@ -48,11 +48,10 @@ extern volatile uint32_t last_heartbeat;
 
 typedef enum {
 	TIMER_BUSY,
-	TTIMER_IDELE,
-	TIMER_WFC
+	TIMER_IDELE
 }TIMER_STATUS;
 
-extern TIMER_STATUS timer_status;
+extern volatile TIMER_STATUS timer_status;
 /* USER CODE END Private defines */
 
 void MX_TIM2_Init(void);

@@ -28,6 +28,8 @@
 
 volatile uint32_t heartbeat = 0;
 volatile uint32_t last_heartbeat = 0;
+
+volatile TIMER_STATUS timer_status = TIMER_IDELE;
 /* USER CODE END 0 */
 
 TIM_HandleTypeDef htim2;
@@ -435,6 +437,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
     			HAL_GPIO_WritePin(MOTOR_FR_2_GPIO_Port, MOTOR_FR_2_Pin, RESET);
 
     			motor_status = MOTOR_STOP;
+    			HAL_TIM_Base_Stop_IT(&htim2);
     			break;
 
     		case MOTOR_BW_RUN:
@@ -442,6 +445,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
     			HAL_GPIO_WritePin(MOTOR_BR_2_GPIO_Port, MOTOR_BR_2_Pin, RESET);
 
     			motor_status = MOTOR_STOP;
+    			HAL_TIM_Base_Stop_IT(&htim2);
     			break;
 
     		case MOTOR_FW_EM_RUN:
@@ -449,6 +453,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
     			HAL_GPIO_WritePin(MOTOR_FR_2_GPIO_Port, MOTOR_FR_2_Pin, RESET);
 
     			motor_status = MOTOR_STOP;
+    			HAL_TIM_Base_Stop_IT(&htim2);
     			break;
 
     		case MOTOR_BW_EM_RUN:
@@ -456,9 +461,11 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
     			HAL_GPIO_WritePin(MOTOR_BR_2_GPIO_Port, MOTOR_BR_2_Pin, RESET);
 
     			motor_status = MOTOR_STOP;
+    			HAL_TIM_Base_Stop_IT(&htim2);
     			break;
 
     		case MOTOR_STOP:
+    			HAL_TIM_Base_Stop_IT(&htim2);
     			break;
     	}
     }
@@ -468,9 +475,18 @@ void User_Timer(uint32_t ms)
 {
 	uint32_t real_ms = (2 * ms) - 1;
 
+	TIM2 -> CNT = 0;
 	TIM2 -> ARR = real_ms;
 
-	HAL_TIM_Base_Start_IT(&htim2);
+	HAL_StatusTypeDef status;
+	status = HAL_TIM_Base_Start_IT(&htim2);
+
+	if(status != HAL_OK)
+	{
+		timer_status = HAL_BUSY;
+		__disable_irq();
+		return;
+	}
 }
 /* USER CODE END 1 */
 
