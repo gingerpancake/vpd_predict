@@ -27,6 +27,10 @@
 
 volatile uint32_t heartbeat = 0;
 volatile uint32_t last_heartbeat = 0;
+
+volatile uint32_t current_tick = 0;
+
+TIMER_STATUS timer_status;
 /* USER CODE END 0 */
 
 TIM_HandleTypeDef htim6;
@@ -353,6 +357,17 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
     {
     	heartbeat ++;
     }
+}
+
+void Systic_Timer(int ms){
+	timer_status = TIMER_BUSY;
+
+	current_tick = HAL_GetTick();
+
+	if(HAL_GetTick() - current_tick >= ms)
+	{
+		timer_status = TIMER_WFC;
+	}
 }
 
 /* USER CODE END 1 */

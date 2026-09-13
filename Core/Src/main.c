@@ -355,16 +355,6 @@ int main(void)
 		  }
 		  /* measuring currnet vpd */
 
-		  /* emergency(over limit temperature) motor control begin */
-		  if(in_temperature > MAX_LIMIT_TEMP)
-		  {
-			  Motor_Emergency_Open();
-		  }else if(in_temperature < MIN_LIMIT_TEMP)
-		  {
-			  Motor_Emergency_Close();
-		  }
-		  /* emergency(over limit temperature) motor control end */
-
 		  if(wakeup_num == 60)
 		  {
 		  /* get_sensor_data from in,ex temperature and humidity, current time begin */
@@ -844,7 +834,6 @@ static void Sensor_Data_to_Ai_Data(AI_INPUT_DATA *sensor_data)
 
 	RTC_Time_scale(&ai_input_data);
 }
-
 /* USER CODE END 4 */
 
 /**

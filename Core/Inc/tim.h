@@ -43,6 +43,14 @@ extern TIM_HandleTypeDef htim16;
 /* USER CODE BEGIN Private defines */
 extern volatile uint32_t heartbeat;
 extern volatile uint32_t last_heartbeat;
+
+typedef enum {
+	TIMER_BUSY,
+	TTIMER_IDELE,
+	TIMER_WFC
+}TIMER_STATUS;
+
+extern TIMER_STATUS timer_status;
 /* USER CODE END Private defines */
 
 void MX_TIM6_Init(void);
@@ -51,7 +59,7 @@ void MX_TIM15_Init(void);
 void MX_TIM16_Init(void);
 
 /* USER CODE BEGIN Prototypes */
-
+void Systic_Timer(int ms);
 /* USER CODE END Prototypes */
 
 #ifdef __cplusplus
