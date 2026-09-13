@@ -41,7 +41,7 @@ typedef enum {
 	MOTOR_STOP
 }MOTOR_STATUS;
 
-extern MOTOR_STATUS motor_status;
+extern volatile MOTOR_STATUS motor_status;
 /* USER CODE END Private defines */
 
 void MX_GPIO_Init(void);

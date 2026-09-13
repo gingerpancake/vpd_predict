@@ -24,7 +24,7 @@
 /* USER CODE BEGIN 0 */
 #include "tim.h"
 
-MOTOR_STATUS motor_status = MOTOR_STOP;
+volatile MOTOR_STATUS motor_status = MOTOR_STOP;
 
 /* USER CODE END 0 */
 

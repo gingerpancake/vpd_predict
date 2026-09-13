@@ -563,7 +563,6 @@ int main(void)
 
 		  	  case PRE_MAX_OUT_CUR_INC:
 		  		  Motor_Backward_Rotation();
-		  		  Motor_Backward_Rotation();
 		  		  break;
 
 		  	  case PRE_MAX_OUT_CUR_DEC:
@@ -579,7 +578,6 @@ int main(void)
 		  		  break;
 
 		  	  case PRE_MIN_OUT_CUR_DEC:
-		  		  Motor_Forward_Rotation();
 		  		  Motor_Forward_Rotation();
 		  		  break;
 
