@@ -342,9 +342,13 @@ void HAL_I2C_MasterRxCpltCallback(I2C_HandleTypeDef *hi2c)
         return;
     }
 
-    if (sensor_state == SENSOR_STATE_IN_WAIT)
+    if (hi2c->Instance == I2C1)
     {
-        in_sensor_rx_ready = 1U;
+    	if(sensor_state != SENSOR_STATE_IN_WAIT)
+    	{
+    		return;
+    	}
+    	in_sensor_rx_ready = 1U;
 
         in_sensor_count ++;
 
@@ -365,7 +369,11 @@ void HAL_I2C_MasterRxCpltCallback(I2C_HandleTypeDef *hi2c)
         in_humidity = 100.0f * (float)in_humi_raw / 65535.0f;
 
     }
-    else if (sensor_state == SENSOR_STATE_EX_WAIT)
+    else if(hi2c->Instance == I2C3)
+    	if(sensor_state != SENSOR_STATE_EX_WAIT)
+    	{
+    		return;
+    	}
     {
         ex_sensor_rx_ready = 1U;
 

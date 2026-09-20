@@ -293,10 +293,10 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
     {
-	  while(rtc_wakeup_event == 0)
+	  /*while(rtc_wakeup_event == 0)
 	  {
 		  __WFI();
-	  }
+	  }*/
 
 	  if (system_status == RAIN_DETECTED)
 	  {
