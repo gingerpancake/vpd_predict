@@ -39,7 +39,7 @@
 
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
-uint8_t wakeup_num = 0U;
+
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
@@ -218,7 +218,6 @@ void RTC_WKUP_IRQHandler(void)
 	    {
 	        LL_RTC_ClearFlag_WUT(RTC);
 	        rtc_wakeup_event = 1U;
-	        wakeup_num ++;
 	    }
   /* USER CODE END RTC_WKUP_IRQn 0 */
   /* USER CODE BEGIN RTC_WKUP_IRQn 1 */

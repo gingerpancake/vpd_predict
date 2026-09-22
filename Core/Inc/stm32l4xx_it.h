@@ -67,7 +67,7 @@ void TIM7_IRQHandler(void);
 void I2C3_EV_IRQHandler(void);
 void I2C3_ER_IRQHandler(void);
 /* USER CODE BEGIN EFP */
-extern uint8_t wakeup_num;
+
 /* USER CODE END EFP */
 
 #ifdef __cplusplus
