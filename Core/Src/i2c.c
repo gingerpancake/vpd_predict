@@ -109,7 +109,7 @@ void MX_I2C3_Init(void)
 
   /* USER CODE END I2C3_Init 1 */
   hi2c3.Instance = I2C3;
-  hi2c3.Init.Timing = 0x00F02880;
+  hi2c3.Init.Timing = 0x10F81430;
   hi2c3.Init.OwnAddress1 = 0;
   hi2c3.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
   hi2c3.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
@@ -368,13 +368,14 @@ void HAL_I2C_MasterRxCpltCallback(I2C_HandleTypeDef *hi2c)
 
         in_humidity = 100.0f * (float)in_humi_raw / 65535.0f;
 
+
     }
     else if(hi2c->Instance == I2C3)
+    {
     	if(sensor_state != SENSOR_STATE_EX_WAIT)
     	{
     		return;
     	}
-    {
         ex_sensor_rx_ready = 1U;
 
         ex_sensor_count ++;

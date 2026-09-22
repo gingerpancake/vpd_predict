@@ -293,10 +293,10 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
     {
-	  /*while(rtc_wakeup_event == 0)
+	  while(rtc_wakeup_event == 0)
 	  {
 		  __WFI();
-	  }*/
+	  }
 
 	  if (system_status == RAIN_DETECTED)
 	  {
@@ -785,7 +785,7 @@ static APP_STATUS Read_In_Sensor_Safe(void) {
 		return APP_ERR;
 	}
 
-	while(in_sensor_rx_ready == 0U)
+	while((in_sensor_rx_ready == 0U) && (sensor_state != SENSOR_STATE_IDLE) )
 	{
 		__WFI();
 
@@ -809,7 +809,7 @@ static APP_STATUS Read_Ex_Sensor_Safe(void) {
 		return APP_ERR;
 	}
 
-	while(ex_sensor_rx_ready == 0U)
+	while((ex_sensor_rx_ready == 0U) && (sensor_state != SENSOR_STATE_IDLE))
 	{
 		__WFI();
 
