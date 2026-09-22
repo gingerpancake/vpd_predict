@@ -232,6 +232,7 @@ static void Y_Inverse_Scale(float *scaled_value);
 static void X_Scale(AI_INPUT_DATA *data);
 static void RTC_Time_scale(AI_INPUT_DATA *data);
 static void Sensor_Data_to_Ai_Data(AI_INPUT_DATA *sensor_data);
+static uint8_t RTC_Is_Hour_Start(void);
 
 /*safe functions */
 static APP_STATUS Read_In_Sensor_Safe(void);
@@ -356,7 +357,7 @@ int main(void)
 		  }
 		  /* measuring currnet vpd */
 
-		  if(wakeup_num == 60)
+		  if(RTC_Is_Hour_Start())
 		  {
 		  /* get_sensor_data from in,ex temperature and humidity, current time begin */
 		  Sensor_Data_to_Ai_Data(&ai_input_data);
@@ -373,7 +374,6 @@ int main(void)
 
 		  fvpd = Vpd_Calculator(ai_output_data[0], ai_output_data[1]);
 		  /* ai_run end */
-		  wakeup_num = 0;
 		  }
 
 		  /* vpd status update */
@@ -486,7 +486,7 @@ int main(void)
 		  }
 		  /* emergency(over limit temperature) motor control end */
 
-		  if(wakeup_num == 60)
+		  if(RTC_Is_Hour_Start())
 		  {
 		  /* get_sensor_data from in,ex temperature and humidity, current time begin */
 		  Sensor_Data_to_Ai_Data(&ai_input_data);
@@ -503,7 +503,6 @@ int main(void)
 
 		  fvpd = Vpd_Calculator(ai_output_data[0], ai_output_data[1]);
 		  /* ai_run end */
-		  wakeup_num = 0;
 		  }
 
 		  /* vpd status update */
@@ -832,6 +831,15 @@ static void Sensor_Data_to_Ai_Data(AI_INPUT_DATA *sensor_data)
 	ai_input_data.ex_humi = ex_humidity;
 
 	RTC_Time_scale(&ai_input_data);
+}
+
+static uint8_t RTC_Is_Hour_Start(void)
+{
+    RTC_TimeTypeDef sTime;
+
+    HAL_RTC_GetTime(&hrtc, &sTime, RTC_FORMAT_BIN);
+
+    return (sTime.Minutes == 0U);
 }
 
 /* USER CODE END 4 */
