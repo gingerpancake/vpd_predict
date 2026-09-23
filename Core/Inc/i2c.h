@@ -41,7 +41,6 @@ extern volatile uint8_t i2c_error_event;
 extern volatile uint8_t in_sensor_rx_ready;
 extern volatile uint8_t ex_sensor_rx_ready;
 
-extern volatile uint8_t in_sensor_count;
 extern volatile uint8_t ex_sensor_count;
 
 extern volatile uint32_t i2c_error_code;
@@ -49,11 +48,11 @@ extern volatile uint32_t i2c_error_code;
 extern SENSOR_DATA in_sensor_data;
 extern SENSOR_DATA ex_sensor_data;
 
-extern float in_temperature;
-extern float in_humidity;
+extern volatile float in_temperature;
+extern volatile float in_humidity;
 
-extern float ex_temperature;
-extern float ex_humidity;
+extern volatile float ex_temperature;
+extern volatile float ex_humidity;
 /* USER CODE END Private defines */
 
 void MX_I2C1_Init(void);

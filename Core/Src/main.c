@@ -85,6 +85,7 @@ VPD_STATUS vpd_status;
 /* USER CODE BEGIN PD */
 #define VPD_IDEAL_MIN     0.8f
 #define VPD_IDEAL_MAX     1.2f
+#define VPD_EPSILON		  0.1f
 
 #define IN_SENSOR_TIMEOUT_MS	500U
 #define EX_SENSOR_TIMEOUT_MS	500U
@@ -157,6 +158,8 @@ float hour_cos;
 
 float month_sin;
 float month_cos;
+
+float vpd_calculated = 0U;
 
 static uint32_t cycle_fail_count = 0U;
 
@@ -346,10 +349,12 @@ int main(void)
 		  /* ex_sensor_read end */
 
 		  /* measuring currnet vpd */
-		  if(pvpd == 0)
+		  if(vpd_calculated == 0)
 		  {
 			  cvpd = Vpd_Calculator(in_temperature, in_humidity);
 			  pvpd = cvpd;
+
+			  vpd_calculated = 1;
 		  }else
 		  {
 			  pvpd = cvpd;
@@ -379,31 +384,31 @@ int main(void)
 		  /* vpd status update */
 
 
-		  if(fvpd > VPD_IDEAL_MAX)
+		  if(fvpd - VPD_IDEAL_MAX > VPD_EPSILON)
 		  {
-			  if(cvpd > pvpd)
+			  if(cvpd - pvpd > VPD_EPSILON)
 			  {
 				  vpd_status = PRE_MAX_OUT_CUR_INC;
-			  }else if(cvpd < pvpd)
+			  }else if(cvpd - pvpd < -VPD_EPSILON)
 			  {
 				  vpd_status = PRE_MAX_OUT_CUR_DEC;
-			  }else if (cvpd == pvpd)
+			  }else
 			  {
 				  vpd_status = PRE_MAX_OUT_CUR_NMV;
 			  }
-		  }else if(fvpd < VPD_IDEAL_MIN)
+		  }else if(fvpd - VPD_IDEAL_MIN < -VPD_EPSILON)
 		  {
-			if(cvpd > pvpd)
+			if(cvpd - pvpd > VPD_EPSILON)
 			{
 				  vpd_status = PRE_MIN_OUT_CUR_INC;
-			}else if(cvpd < pvpd)
+			}else if(cvpd - pvpd < -VPD_EPSILON)
 			{
 				  vpd_status = PRE_MIN_OUT_CUR_DEC;
-			}else if(cvpd == pvpd)
+			}else
 			{
 				  vpd_status = PRE_MIN_OUT_CUR_NMV;
 			}
-		  }else if(VPD_IDEAL_MIN <= fvpd && fvpd <= VPD_IDEAL_MAX)
+		  }else
 		  {
 			  if(cvpd > VPD_IDEAL_MAX)
 			  {
@@ -465,10 +470,12 @@ int main(void)
 		  /* ex_sensor_read end */
 
 		  /* measuring currnet vpd */
-		  if(pvpd == 0)
+		  if(vpd_calculated == 0)
 		  {
 			  cvpd = Vpd_Calculator(in_temperature, in_humidity);
 			  pvpd = cvpd;
+
+			  vpd_calculated = 1;
 		  }else
 		  {
 			  pvpd = cvpd;
@@ -508,31 +515,31 @@ int main(void)
 		  /* vpd status update */
 
 
-		  if(fvpd > VPD_IDEAL_MAX)
+		  if(fvpd - VPD_IDEAL_MAX > VPD_EPSILON)
 		  {
-			  if(cvpd > pvpd)
+			  if(cvpd - pvpd > VPD_EPSILON)
 			  {
 				  vpd_status = PRE_MAX_OUT_CUR_INC;
-			  }else if(cvpd < pvpd)
+			  }else if(cvpd - pvpd < -VPD_EPSILON)
 			  {
 				  vpd_status = PRE_MAX_OUT_CUR_DEC;
-			  }else if (cvpd == pvpd)
+			  }else
 			  {
 				  vpd_status = PRE_MAX_OUT_CUR_NMV;
 			  }
-		  }else if(fvpd < VPD_IDEAL_MIN)
+		  }else if(fvpd - VPD_IDEAL_MIN < -VPD_EPSILON)
 		  {
-			if(cvpd > pvpd)
-			{
+			  if(cvpd - pvpd > VPD_EPSILON)
+			  {
 				  vpd_status = PRE_MIN_OUT_CUR_INC;
-			}else if(cvpd < pvpd)
-			{
+			  }else if(cvpd - pvpd < -VPD_EPSILON)
+			  {
 				  vpd_status = PRE_MIN_OUT_CUR_DEC;
-			}else if(cvpd == pvpd)
-			{
+			  }else
+			  {
 				  vpd_status = PRE_MIN_OUT_CUR_NMV;
-			}
-		  }else if(VPD_IDEAL_MIN <= fvpd && fvpd <= VPD_IDEAL_MAX)
+			  }
+		  }else
 		  {
 			  if(cvpd > VPD_IDEAL_MAX)
 			  {

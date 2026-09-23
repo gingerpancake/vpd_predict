@@ -29,7 +29,6 @@ volatile uint8_t i2c_error_event = 0U;
 volatile uint8_t in_sensor_rx_ready = 0U;
 volatile uint8_t ex_sensor_rx_ready = 0U;
 
-volatile uint8_t in_sensor_count = 0U;
 volatile uint8_t ex_sensor_count = 0U;
 
 volatile uint32_t i2c_error_code;
@@ -43,11 +42,11 @@ uint16_t in_humi_raw;
 uint16_t ex_temp_raw;
 uint16_t ex_humi_raw;
 
-float in_temperature;
-float in_humidity;
+volatile float in_temperature;
+volatile float in_humidity;
 
-float ex_temperature;
-float ex_humidity;
+volatile float ex_temperature;
+volatile float ex_humidity;
 
 /* USER CODE END 0 */
 
@@ -350,9 +349,6 @@ void HAL_I2C_MasterRxCpltCallback(I2C_HandleTypeDef *hi2c)
     	}
     	in_sensor_rx_ready = 1U;
 
-        in_sensor_count ++;
-
-        in_sensor_count = 0U;
         in_sensor_data.temp_msb = ircv[0];
         in_sensor_data.temp_lsb = ircv[1];
         in_sensor_data.temp_crc = ircv[2];
