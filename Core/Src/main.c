@@ -582,6 +582,7 @@ int main(void)
 
 		  	  case PRE_MIN_OUT_CUR_NMV:
 		  		  Motor_Forward_Rotation();
+		  		  break;
 
 		  	  default:
 		  		  break;
